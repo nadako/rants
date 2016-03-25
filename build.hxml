@@ -1,0 +1,6 @@
+-main Main
+-js main.js
+-lib hxnodejs
+-lib markdown
+--next
+-cmd node main.js

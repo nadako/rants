@@ -1,7 +1,4 @@
-# 
-
 **UPDATE**: I added this post to the new Haxe.org blog: http://haxe.org/blog/importhx-intro
-
 
 # New feature in Haxe language: `import.hx`
 

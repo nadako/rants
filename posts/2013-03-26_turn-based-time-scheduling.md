@@ -9,12 +9,14 @@ It's based on an energy principle: While actor has energy he can perform actions
 
 We define actor as a simple interface:
 
-    interface IActor
-    {
-        var energy:Int;
-        var speed:Int;
-        function act():Int;
-    }
+```haxe
+interface IActor
+{
+    var energy:Int;
+    var speed:Int;
+    function act():Int;
+}
+```
 
 So, `energy` is his current energy, `speed` is how much energy we add after all energy is used, and the `act` function is obviously the one doing the job. It returns **action energy cost**, which will be substracted from actor's energy. This way we can define actors with different speed and actions that takes different time. This reminds me of classic turn-based games with action points, like UFO and Fallout.
 
