@@ -4,12 +4,23 @@
     <meta charset="utf-8"/>
     <title>::title::</title>
     <link rel="stylesheet" href="::relDir::/github.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 </head>
 <body>
+<header>
+    <img src="::relDir::/photo.jpg" alt="My photo" width="150" height="150" style="float:right;border-radius:128px" />
+    <h1>Dan Korostelev</h1>
+    <a title="GitHub" href="https://github.com/nadako"><i class="fa fa-lg fa-github"></i></a>
+    <a title="LinkedIn" href="https://www.linkedin.com/in/nadako"><i class="fa fa-lg fa-linkedin"></i></a>
+    <a title="Email" href="mailto:nadako@gmail.com"><i class="fa fa-lg fa-envelope"></i></a>
+    <a title="Twitter" href="https://twitter.com/nadako"><i class="fa fa-lg fa-twitter"></i></a>
+</header>
 
+<article>
 ::post.content::
+</article>
 
-<p>Date: ::date::</p>
+<p>Date: <time>::date::</time></p>
 
 <script src="::relDir::/highlight.pack.js"></script>
 <script>hljs.initHighlightingOnLoad();</script>
