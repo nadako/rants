@@ -1,0 +1,10 @@
+.content {
+    clear: both;
+}
+
+.title .photo {
+    float: right;
+    border-radius: 128px;
+    width: 150px;
+    height: 150px;
+}

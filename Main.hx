@@ -62,17 +62,22 @@ class Main {
         var title = null;
         var blocks = document.parseLines(lines);
 
-        for (block in blocks) {
-            var el = Std.instance(block, ElementNode);
+        for (i in 0...blocks.length) {
+            var el = Std.instance(blocks[i], ElementNode);
             if (el != null && el.tag == "h1" && !el.isEmpty()) {
                 title = cast(el.children[0],TextNode).text;
+                blocks.splice(i, 1);
                 break;
             }
         }
 
         var tagsVisitor = new ExtractTagsVisitor();
-        for (block in blocks) {
-            block.accept(tagsVisitor);
+        for (i in 0...blocks.length) {
+            blocks[i].accept(tagsVisitor);
+            if (tagsVisitor.result.length > 0) {
+                blocks.splice(i, 1);
+                break;
+            }
         }
 
         return {
