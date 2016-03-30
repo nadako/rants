@@ -1,3 +1,5 @@
+[tags]: haxe
+
 # Cool feature of upcoming Haxe 3.2: enum abstracts.
 
 **UPDATE**: As of commit 9f1a25b1d64ce8fa5ddd6942bea35ce322f3416a, @:fakeEnum was renamed to @:enum. I have updated the article for newer terms.
@@ -37,5 +39,3 @@ Also, haxe compiler will show error when trying to switch over a `enum abstract`
 Inside the code, this stuff is done with a `build macro` and very little compiler magic (basically @:enum becomes a @:build meta, and in `switch` handling there's a special case for `enum abstracts`, that's all).
 
 How cool is that? :)
-
-> Tags: haxe

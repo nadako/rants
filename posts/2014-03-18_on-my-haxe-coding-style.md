@@ -1,3 +1,5 @@
+[tags]: haxe,codestyle
+
 # On my haxe coding style
 
 # Haxe
@@ -117,5 +119,3 @@ One of the uses for that are `enum abstracts`, [described](http://nadako.tumblr.
 One can think of more uses for abstracts, for example: a millisecond time stamp may be represented by Float because of a large number it can contain, however you don't want to have non-integer operations for it and don't want to confuse it with some ratio value, also represented by Float.
 
 More on abstracts are here: http://haxe.org/manual/types-abstract.html
-
-> Tags: haxe, codestyle

@@ -1,3 +1,5 @@
+[tags]: haxe
+
 # Haxe: working with dynamic anonymous structures in a typed way
 
 Often people ask about how or what's the best way to work with anonymous structures that don't have a predefined set of fields (and hence can't be typed with haxe structure type). Basically, objects like that are string-keyed dictionaries. They can be used instead of haxe's `Map` type for example when working with JSON collections or extern JavaScript data.
@@ -75,6 +77,3 @@ Here's what generated JS looks like for the `main` function:
 As you can see it's pretty the same as if you've worked with `Dynamic` and `Reflect` by hand, but it's much easier and strictly typed.
 
 Now I only hope Google will give this post for an answer on working with dynamic structures in Haxe :-P
-
-
-> Tags: haxe

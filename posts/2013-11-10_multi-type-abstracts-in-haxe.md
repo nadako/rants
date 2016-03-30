@@ -1,3 +1,5 @@
+[tags]: haxe
+
 # Multi-type abstracts in haxe
 
 If you ever wondered how `Map` creation works in Haxe, here's how: it's a special kind of `abstract` - the `multi-type abstract`. It differs from normal `abstract` in that it is constructed via special `@:to` functions, so when you call `new Map()`, it actually selects one of these functions depending on given type.
@@ -48,5 +50,3 @@ The `main` function will be compiled to this (javascript):
 This feature is quite useful when you want to abstract multiple implementations depending on type (like it's done with Map), but it wasn't really documented, so I had to read some sources and experiment.
 
 Actually, it may be not documented on purpose because the syntax is subject to change in future versions? I don't know, gotta find out :-)
-
-> Tags: haxe

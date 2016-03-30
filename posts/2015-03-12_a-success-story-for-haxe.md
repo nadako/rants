@@ -1,3 +1,5 @@
+[tags]: haxe,javascript,node,flash,actionscript,ocaml,gamedev,successtory
+
 # A success story for Haxe
 
 **NOTE: Я выложил [русский перевод](http://nadako.tumblr.com/post/114624037180/haxe-success-russian) этой статьи.**
@@ -100,6 +102,3 @@ I discovered so many awesome techniques that are unusual in JS/AS3/C# world, suc
 I learned what's REAL strict typing, new programming paradigms, how to better structure your code, how compilers work, how awesome could compile-time checking be, not to mention new programming language. This really made me a better programmer, unlike working with Unity (hehe).
 
 Also I'm an active contributor to an open-source project now and am pretty proud of myself!
-
-
-> Tags: haxe, javascript, node, flash, actionscript, ocaml, gamedev, successtory

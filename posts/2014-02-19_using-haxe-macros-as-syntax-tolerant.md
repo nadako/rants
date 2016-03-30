@@ -1,3 +1,5 @@
+[tags]: haxe,json
+
 # Using haxe macros as syntax-tolerant, position-aware json parser
 
 Today I came up with an idea I find interesting enough to write a post about. In our game, we use JSON for game configuration and object definition which is convenient, because JSON is a simple text format allowing you to express almost any data one way or another.
@@ -81,5 +83,3 @@ How do we use this? Well, we have a folder of JSON files that are getting parsed
 I'll probably write another post about JSON validation in future, because that's also quite interesting topic, considering that we validate JSON right against Haxe structure definitions that are directly used in game code.
 
 You can check out the full example here: https://gist.github.com/nadako/9081608
-
-> Tags: haxe, json

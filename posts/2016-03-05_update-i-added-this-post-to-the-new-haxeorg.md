@@ -1,3 +1,5 @@
+[tags]: haxe
+
 **UPDATE**: I added this post to the new Haxe.org blog: http://haxe.org/blog/importhx-intro
 
 # New feature in Haxe language: `import.hx`
@@ -76,6 +78,4 @@ Main.hx
         }
     }
 
-Cool, right? :) </person>
-
-> Tags: haxe
+Cool, right? :)

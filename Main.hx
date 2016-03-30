@@ -59,6 +59,9 @@ class Main {
         var lines = ~/(\r\n|\r)/g.replace(source, '\n').split("\n");
         document.parseRefLinks(lines);
 
+        var tagsLink = document.refLinks["tags"];
+        var tags = if (tagsLink == null) [] else tagsLink.url.split(",");
+
         var title = null;
         var blocks = document.parseLines(lines);
 
@@ -71,47 +74,12 @@ class Main {
             }
         }
 
-        var tagsVisitor = new ExtractTagsVisitor();
-        for (i in 0...blocks.length) {
-            blocks[i].accept(tagsVisitor);
-            if (tagsVisitor.result.length > 0) {
-                blocks.splice(i, 1);
-                break;
-            }
-        }
-
         return {
             title: title,
             content: Markdown.renderHtml(blocks),
-            tags: tagsVisitor.result,
+            tags: tags,
             date: date,
             slug: postFilenameRe.matched(4)
         };
     }
-}
-
-class ExtractTagsVisitor implements NodeVisitor {
-    static var tagsRe = ~/^\s*Tags\s*:\s*(.*)\s*$/i;
-
-    public var result:Array<String>;
-    var inBlockQuote:Bool;
-
-    public function new() {
-        result = [];
-    }
-
-    public function visitText(text:TextNode):Void {
-        if (tagsRe.match(text.text)) {
-            var tags = tagsRe.matched(1).split(",");
-            result = [for (tag in tags) tag.trim().toLowerCase()];
-        }
-    }
-
-    public function visitElementBefore(element:ElementNode):Bool {
-        if (element.tag == "blockquote")
-            inBlockQuote = true;
-        return !element.isEmpty();
-    }
-
-    public function visitElementAfter(element:ElementNode):Void {}
 }

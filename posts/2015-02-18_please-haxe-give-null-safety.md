@@ -1,3 +1,5 @@
+[tags]: haxe
+
 # Please Haxe, give null safety!
 
 As you may know, I like Haxe so much that I'm using it everywhere and joined its dev team to make it even better. But there are a couple of things that are constantly bugging me and don't seem to be justified by the need to compile to multiple targets. One of them is that there's basically no *null safety* in Haxe.

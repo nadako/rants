@@ -1,3 +1,5 @@
+[tags]: haxe,macro,json
+
 # New Haxe feature - @:genericBuild
 
 If you follow haxe development, you probably know about this one. The `@:genericBuild` meta is used to specify a build macro that is executed per instance of a generic type. For example:
@@ -48,5 +50,3 @@ For structures we need to create a new type that has read-only version of origin
 This is quite elegant, because we can use both original type, for example if we are creating new object, or modifying an explicitly created copy. And the read-only version of it, if we are returning data from a database, or passing to a function and want to be sure that it won't modify it. This kinda reminds me of `const` C++ keyword, hence the name :)
 
 Here's the full example: https://gist.github.com/nadako/9200026 It is pretty basic, but if you read the code, you get the idea. Also it shows another nice pattern-matching feature: extractors (the `=>` syntax).
-
-> Tags: haxe, macro, json
