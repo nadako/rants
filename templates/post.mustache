@@ -1,0 +1,17 @@
+{{<layout}}
+{{$title}}{{post.title}}{{/title}}
+{{$content}}
+<article>
+    <header>
+        <h2>{{post.title}}</h2>
+        <p>
+            <time>{{date}}</time>
+            {{#post.tags}}{{.}} {{/post.tags}}
+        </p>
+    </header>
+    <section>
+        {{{post.content}}}
+    </section>
+</article>
+{{/content}}
+{{/layout}}

@@ -2,14 +2,14 @@
 <html>
 <head>
     <meta charset="utf-8"/>
-    <title>::title:: - ::post.title::</title>
-    <link rel="stylesheet" href="::relDir::/style.css">
-    <link rel="stylesheet" href="::relDir::/github.css">
+    <title>{{title}} - {{$title}}{{/title}}</title>
+    <link rel="stylesheet" href="{{relDir}}/style.css">
+    <link rel="stylesheet" href="{{relDir}}/github.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 </head>
 <body>
 <header class="title">
-    <img src="::relDir::/photo.jpg" alt="My photo" class="photo" />
+    <img src="{{relDir}}/photo.jpg" alt="My photo" class="photo" />
     <h1>Dan Korostelev</h1>
     <a title="GitHub" href="https://github.com/nadako"><i class="fa fa-lg fa-github"></i></a>
     <a title="LinkedIn" href="https://www.linkedin.com/in/nadako"><i class="fa fa-lg fa-linkedin"></i></a>
@@ -17,24 +17,9 @@
     <a title="Twitter" href="https://twitter.com/nadako"><i class="fa fa-lg fa-twitter"></i></a>
 </header>
 
-<div class="content">
-    <article>
-        <header>
-            <h2>::post.title::</h2>
-            <p>
-                <time>::date::</time>
-                ::foreach post.tags::
-                    #::__current__::
-                ::end::
-            </p>
-        </header>
-        <section>
-            ::post.content::
-        </section>
-    </article>
-</div>
+<div class="content">{{$content}}{{/content}}</div>
 
-<script src="::relDir::/highlight.pack.js"></script>
+<script src="{{relDir}}/highlight.pack.js"></script>
 <script>hljs.initHighlightingOnLoad();</script>
 </body>
 </html>

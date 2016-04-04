@@ -1,5 +1,4 @@
 import haxe.io.Path;
-import haxe.Template;
 import sys.FileSystem;
 import sys.io.File;
 import Markdown;
@@ -21,8 +20,13 @@ class Main {
     static inline var ASSETS_DIR = "assets";
 
     static function main() {
-        var template = new Template(File.getContent(TEMPLATE_DIR + "/layout.mtt"));
-        Template.globals.title = "nadako";
+        function getTemplate(name) return File.getContent('$TEMPLATE_DIR/$name.mustache');
+
+        var postTemplate = getTemplate("post");
+        var templateContext = new mustache.Context({
+            title: "nadako"
+        });
+
         var postsOutDir = OUT_DIR + "/posts";
         FileSystem.createDirectory(postsOutDir);
 
@@ -30,11 +34,11 @@ class Main {
             var path = POSTS_DIR + "/" + file;
             if (Path.extension(path) != "md") continue;
             var post = readPost(path);
-            var html = template.execute({
+            var html = Mustache.render(postTemplate, templateContext.push({
                 date: DateTools.format(post.date, "%F"),
                 post: post,
                 relDir: ".."
-            });
+            }), getTemplate);
             File.saveContent(postsOutDir + "/" + Path.withoutExtension(file) + ".html", html);
         }
 
