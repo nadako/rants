@@ -83,7 +83,7 @@ class Main {
         for (i in 0...blocks.length) {
             var el = Std.instance(blocks[i], ElementNode);
             if (el != null && el.tag == "h1" && !el.isEmpty()) {
-                title = cast(el.children[0],TextNode).text;
+                title = new markdown.HtmlRenderer().render(el.children);
                 blocks.splice(i, 1);
                 break;
             }
