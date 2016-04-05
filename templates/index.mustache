@@ -1,0 +1,12 @@
+{{<layout}}
+{{$title}}Blog{{/title}}
+{{$content}}
+
+<ul>
+{{#posts}}
+    <li><a href="{{relDir}}/posts/{{slug}}.html">{{title}}</a> ({{dateStr}})
+{{/posts}}
+</ul>
+
+{{/content}}
+{{/layout}}

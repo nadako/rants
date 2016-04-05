@@ -10,6 +10,7 @@ typedef Post = {
     var content:String;
     var tags:Array<String>;
     var date:Date;
+    var dateStr:String;
     var slug:String;
 }
 
@@ -23,6 +24,7 @@ class Main {
         function getTemplate(name) return File.getContent('$TEMPLATE_DIR/$name.mustache');
 
         var postTemplate = getTemplate("post");
+        var indexTemplate = getTemplate("index");
         var templateContext = new mustache.Context({
             title: "nadako"
         });
@@ -30,24 +32,33 @@ class Main {
         var postsOutDir = OUT_DIR + "/posts";
         FileSystem.createDirectory(postsOutDir);
 
+        var posts = [];
         for (file in FileSystem.readDirectory(POSTS_DIR)) {
             var path = POSTS_DIR + "/" + file;
             if (Path.extension(path) != "md") continue;
             var post = readPost(path);
+            posts.push(post);
             var html = Mustache.render(postTemplate, templateContext.push({
-                date: DateTools.format(post.date, "%F"),
                 post: post,
                 relDir: ".."
             }), getTemplate);
             File.saveContent(postsOutDir + "/" + Path.withoutExtension(file) + ".html", html);
         }
 
+        posts.sort(function(a, b) return Reflect.compare(b.date.getTime(), a.date.getTime()));
+
+        var index = Mustache.render(indexTemplate, templateContext.push({
+            posts: posts,
+            relDir: ".",
+        }), getTemplate);
+        File.saveContent(OUT_DIR + "/index.html", index);
+
         for (file in FileSystem.readDirectory(ASSETS_DIR)) {
             File.copy(ASSETS_DIR + "/" + file, OUT_DIR + "/" + file);
         }
     }
 
-    static var postFilenameRe = ~/^(\d{4})-(\d{2})-(\d{2})_(.*)\.md$/;
+    static var postFilenameRe = ~/^((\d{4})-(\d{2})-(\d{2})_.*)\.md$/;
 
     static function readPost(path:String):Post {
         var filename = Path.withoutDirectory(path);
@@ -56,7 +67,7 @@ class Main {
 
         inline function i(n) return Std.parseInt(postFilenameRe.matched(n));
 
-        var date = new Date(i(1), i(2), i(3), 0, 0, 0);
+        var date = new Date(i(2), i(3), i(4), 0, 0, 0);
 
         var source = File.getContent(path);
         var document = new Document();
@@ -83,7 +94,8 @@ class Main {
             content: Markdown.renderHtml(blocks),
             tags: tags,
             date: date,
-            slug: postFilenameRe.matched(4)
+            dateStr: DateTools.format(date, "%F"),
+            slug: postFilenameRe.matched(1)
         };
     }
 }
