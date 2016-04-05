@@ -1,0 +1,14 @@
+language: haxe
+
+env:
+  global:
+    - secure: VI18f2iGugQuMLpPRP/mFjBJeXnufMM2wOm6WdRKKcpTH4V/cOnLK6Ra346gsOdnZrxXx80nXpllGR0UghRhkabudqcFra0k7YmQvqEJFY1HAl2Nmc8IAXYQq6fQ4eFeHdPeJQIGMFu2qZdqPki9pfAE9qtK07/+PHQeSACp0rO4sJeZwVkk1S3a0/nAtTNFor/VpnpsZLlXgaSnYqj3lIulbYCUB3BTS+Dmm1qM/OSKLFYdL/JjSI1oETVpVKfoHJ48/JUJytWYh+2VsoFZWZVaGy7vs01aWz85UvjC5LSRtoAOb3nHlF+K0tBA+XzGI9Qb26JcnspGyf36ywiw61PZz23C1rYEQ0NDpVo8Ve8x4iFapizM5P1CDUKFfhdQl51Rw83pVm9d7xr+I1KCE7BgJCxfA5sJQMWuQg4cIATPbEYnzDL+He3KZmCiTnkw0u5T7rJN/+8msRyFdroeBtMlWBCjg7XjCDumbSV32B3f5yfD6m52Zio0L+JyxntWIAKLxe+AMouZ/+m9qrb1gdnc4dIjISV/x+wuDG9JuBOtM5v84VxuOdehDIPUK04DmH/08rIvrFpghX+atqlErmpr+7lh1Fs9lO7hTHDy6ED9uXt/8hhG61NgAU+NQK+/HEc5UETZDKeA/IxsnRWxvDxDdKJ0iHT6Ih+pepLvzQI=
+
+haxe:
+  - 3.2.1
+
+hxml:
+  - build.hxml
+
+after_script:
+  - bash deploy.sh
