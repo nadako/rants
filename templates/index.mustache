@@ -1,15 +1,25 @@
 {{<layout}}
 {{$title}}Blog{{/title}}
 {{$content}}
-
-<ul>
-{{#posts}}
-    <li><a href="{{relDir}}/posts/{{slug}}.html">{{{title}}}</a> ({{dateStr}}, <span class="disqus-comment-count" data-disqus-identifier="{{disqusId}}"></span>)
-{{/posts}}
-</ul>
-
+    {{#posts}}
+    <section class="index-posts">
+        <article>
+            <header>
+                <h2><a href="{{relDir}}/posts/{{slug}}.html">{{{title}}}</a></h2>
+            </header>
+            <footer>
+                <p>
+                    <time>Published on {{dateStr}}</time>
+                </p>
+                <p>
+                    <span class="disqus-comment-count" data-disqus-identifier="{{disqusId}}"></span>
+                </p>
+            </footer>
+        </article>
+    </section>
+    {{/posts}}
 {{/content}}
 {{$scripts}}
-<script id="dsq-count-scr" src="https://nadako.disqus.com/count.js" async></script>
+    <script id="dsq-count-scr" src="https://nadako.disqus.com/count.js" async></script>
 {{/scripts}}
 {{/layout}}

@@ -99,3 +99,25 @@ p code, h1 code, h2 code, h3 code, h4 code, h5 code, h6 code, li code {
     padding: 1%;
     text-align: center;
 }
+
+.index-posts article {
+    background-color: #CFD8DC;
+    padding: 2%;
+    margin-bottom: 2%;
+    border-radius: 5px;
+}
+
+.index-posts header h2 {
+    margin: 0 0 1% 0;
+}
+
+.index-posts footer p {
+    margin: 0;
+    font-size: 85%;
+    color: #5E676E;
+}
+
+.index-posts footer {
+    display: flex;
+    justify-content: space-between;
+}
