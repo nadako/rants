@@ -24,7 +24,7 @@ a:hover {
     color: #fff;
 }
 
-.main-header a {
+.main-header a, .main-footer a {
     color: #fff;
 }
 
@@ -80,4 +80,15 @@ a:hover {
 
 #links ul li {
     display: inline;
+}
+
+.main-footer {
+    clear: both;
+    background-color: #455A64;
+}
+
+.main-footer p {
+    margin: 0;
+    padding: 1%;
+    text-align: center;
 }
