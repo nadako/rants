@@ -5,13 +5,15 @@ import Markdown;
 import markdown.AST;
 using StringTools;
 
-typedef Post = {
-    var title:String;
-    var content:String;
-    var tags:Array<String>;
-    var date:Date;
-    var dateStr:String;
-    var slug:String;
+@:structInit
+class Post {
+    public var title:String;
+    public var content:String;
+    public var tags:Array<String>;
+    public var date:Date;
+    public var slug:String;
+
+    public function dateStr() return DateTools.format(date, "%F");
 }
 
 class Main {
@@ -94,7 +96,6 @@ class Main {
             content: Markdown.renderHtml(blocks),
             tags: tags,
             date: date,
-            dateStr: DateTools.format(date, "%F"),
             slug: postFilenameRe.matched(1)
         };
     }
