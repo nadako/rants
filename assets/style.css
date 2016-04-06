@@ -74,8 +74,9 @@ p code, h1 code, h2 code, h3 code, h4 code, h5 code, h6 code {
 
 #my-photo {
     border-radius: 128px;
-    width: 150px;
-    height: 150px;
+    max-width: 150px;
+    width: 80%;
+    height: auto;
 }
 
 #links ul {
