@@ -4,9 +4,12 @@
 
 <ul>
 {{#posts}}
-    <li><a href="{{relDir}}/posts/{{slug}}.html">{{{title}}}</a> ({{dateStr}})
+    <li><a href="{{relDir}}/posts/{{slug}}.html">{{{title}}}</a> ({{dateStr}}, <span class="disqus-comment-count" data-disqus-identifier="{{disqusId}}"></span>)
 {{/posts}}
 </ul>
 
 {{/content}}
+{{$scripts}}
+<script id="dsq-count-scr" src="https://nadako.disqus.com/count.js" async></script>
+{{/scripts}}
 {{/layout}}
