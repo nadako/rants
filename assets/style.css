@@ -1,10 +1,83 @@
-.content {
-    clear: both;
+body {
+    font-family: sans-serif;
+    color: #212121;
+    margin: 0;
 }
 
-.title .photo {
+a {
+    text-decoration: none;
+    color: #448AFF;
+}
+
+a:hover {
+    color: #212121;
+}
+
+.main-header {
+    background-color: #455A64;
+    margin-bottom: 2%;
+}
+
+.main-header h1 {
+    margin: 0;
+    padding: 1% 2%;
+    color: #fff;
+}
+
+.main-header a {
+    color: #fff;
+}
+
+.main {
+    width: 75%;
+    margin: 0 auto;
+}
+
+.content {
+    width: 70%;
+    float: left;
+}
+
+.sidebar {
     float: right;
+    width: 26%;
+    margin-left: 4%;
+    text-align: center;
+}
+
+.sidebar article {
+    background-color: #CFD8DC;
+    margin-bottom: 2%;
+}
+
+.sidebar article h2 {
+    color: #FFF;
+    margin: 0;
+    padding: 2%;
+    font-size: 120%;
+    background-color: #455A64;
+}
+
+.sidebar article section {
+    padding: 3% 2%;
+}
+
+.sidebar article p {
+    font-size: 85%;
+}
+
+#my-photo {
     border-radius: 128px;
     width: 150px;
     height: 150px;
+}
+
+#links ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+#links ul li {
+    display: inline;
 }
