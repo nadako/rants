@@ -1,3 +1,5 @@
+[disqus]: 46340820457
+
 # Turn-based time scheduling
 
 I finally came up with a simple yet versatile implementation for scheduling actions in a roguelike game.

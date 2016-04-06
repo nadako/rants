@@ -1,4 +1,5 @@
 [tags]: haxe
+[disqus]: 66530395263
 
 # Multi-type abstracts in haxe
 

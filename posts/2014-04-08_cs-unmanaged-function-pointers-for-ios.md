@@ -1,3 +1,5 @@
+[disqus]: 82111636787
+
 # C# unmanaged function pointers for iOS
 
 Just a reminder to myself when I need this thing next time for making Unity work with native code:

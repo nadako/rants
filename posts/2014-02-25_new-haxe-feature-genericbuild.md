@@ -1,4 +1,5 @@
 [tags]: haxe,macro,json
+[disqus]: 77754638526
 
 # New Haxe feature - @:genericBuild
 

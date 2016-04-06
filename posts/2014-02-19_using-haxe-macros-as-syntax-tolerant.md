@@ -1,4 +1,5 @@
 [tags]: haxe,json
+[disqus]: 77106860013
 
 # Using haxe macros as syntax-tolerant, position-aware json parser
 

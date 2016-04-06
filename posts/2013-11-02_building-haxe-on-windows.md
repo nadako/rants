@@ -1,4 +1,5 @@
 [tags]: haxe,ocaml,cygwin
+[disqus]: 65800973304
 
 # Building Haxe on Windows
 

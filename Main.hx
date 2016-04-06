@@ -12,6 +12,7 @@ class Post {
     public var tags:Array<String>;
     public var date:Date;
     public var slug:String;
+    public var disqusId:String;
 
     public function dateStr() return DateTools.format(date, "%F");
 }
@@ -79,6 +80,9 @@ class Main {
         var tagsLink = document.refLinks["tags"];
         var tags = if (tagsLink == null) [] else tagsLink.url.split(",");
 
+        var disqusIdLink = document.refLinks["disqus"];
+        var disqusId = if (disqusIdLink != null) disqusIdLink.url else throw 'Post at $path doesnt have the [disqus] tag'; // TODO: generate one and save
+
         var title = null;
         var blocks = document.parseLines(lines);
 
@@ -96,7 +100,8 @@ class Main {
             content: Markdown.renderHtml(blocks),
             tags: tags,
             date: date,
-            slug: postFilenameRe.matched(1)
+            slug: postFilenameRe.matched(1),
+            disqusId: disqusId
         };
     }
 }

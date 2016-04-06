@@ -1,4 +1,5 @@
 [tags]: haxe
+[disqus]: 64707798715
 
 # Cool feature of upcoming Haxe 3.2: enum abstracts.
 

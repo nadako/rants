@@ -1,4 +1,5 @@
 [tags]: haxe
+[disqus]: 86393684765
 
 # Haxe: working with dynamic anonymous structures in a typed way
 
