@@ -14,9 +14,9 @@ a:hover {
 }
 
 p code, h1 code, h2 code, h3 code, h4 code, h5 code, h6 code {
-    background-color: #f8f8f8;
-    padding: 2px 4px;
-    font-weight: bold;
+    background-color: rgba(0,0,0,0.04);
+    padding: 0.2em;
+    border-radius: 3px;
 }
 
 .main-header {
