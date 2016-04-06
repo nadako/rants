@@ -13,7 +13,7 @@ a:hover {
     color: #212121;
 }
 
-p code, h1 code, h2 code, h3 code, h4 code, h5 code, h6 code {
+p code, h1 code, h2 code, h3 code, h4 code, h5 code, h6 code, li code {
     background-color: rgba(0,0,0,0.04);
     padding: 0.2em;
     border-radius: 3px;
