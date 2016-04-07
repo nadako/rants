@@ -7,7 +7,7 @@ using StringTools;
 
 @:structInit
 class Post {
-    static inline var BASE_URL = "http://nadako.github.io/rants";
+    public static inline var BASE_URL = "http://nadako.github.io/rants";
 
     public var title:String;
     public var content:String;
@@ -59,6 +59,30 @@ class Main {
             relDir: ".",
         }), getTemplate);
         File.saveContent(OUT_DIR + "/index.html", index);
+
+        inline function date(d) {
+            return DateTools.format(d, "%Y-%m-%d") + "T" + DateTools.format(d,"%T") + "Z";
+        }
+
+        var atom = Mustache.render(getTemplate("feed"), {
+            id: "tag:nadako.github.io,2016:/rants",
+            title: "nadako's rants",
+            url: Post.BASE_URL + "/",
+            updated: date(posts[0].date),
+            author: {
+                name: "Dan Korostelev",
+                email: "nadako@gmail.com",
+            },
+            entries: posts.map(function(p) {
+                return {
+                    id: "tag:nadako.github.io," + p.dateStr() + ":/rants/" + p.slug + ".html",
+                    title: p.title,
+                    url: Post.BASE_URL + "/posts/" + p.slug + ".html",
+                    updated: date(p.date)
+                };
+            })
+        });
+        File.saveContent(OUT_DIR + "/atom.xml", atom);
 
         for (file in FileSystem.readDirectory(ASSETS_DIR)) {
             copyRec(ASSETS_DIR + "/" + file, OUT_DIR + "/" + file);
