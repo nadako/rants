@@ -1,14 +1,18 @@
 {{<layout}}
 {{$title}}{{post.title}}{{/title}}
 {{$content}}
-<article{{#post.lang}} lang="{{.}}"{{/post.lang}}>
+<article class="post"{{#post.lang}} lang="{{.}}"{{/post.lang}}>
     <header>
-        <h2>{{{post.title}}}</h2>
-        <p>
-            <time pubdate datetime="{{post.dateStr}}">{{post.dateStr}}</time>
-            {{#post.tags}}{{.}} {{/post.tags}}
-        </p>
+        <h1>{{{post.title}}}</h1>
     </header>
+    <footer>
+        <p>
+            <time pubdate datetime="{{post.dateStr}}">Published on {{post.dateStr}}</time>
+        </p>
+        <p class="tags">
+            {{#post.tags}}#{{.}} {{/post.tags}}
+        </p>
+    </footer>
     <section>
         {{{post.content}}}
     </section>

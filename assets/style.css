@@ -126,3 +126,16 @@ p code, h1 code, h2 code, h3 code, h4 code, h5 code, h6 code, li code {
     display: flex;
     justify-content: space-between;
 }
+
+article.post header h1 {
+    font-size: 200%;
+    margin: 0;
+}
+
+article.post footer {
+    font-size: 85%;
+    color: #5E676E;
+    border-bottom: 1px solid #CFD8DC;
+    display: flex;
+    justify-content: space-between;
+}
