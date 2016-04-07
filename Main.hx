@@ -58,7 +58,18 @@ class Main {
         File.saveContent(OUT_DIR + "/index.html", index);
 
         for (file in FileSystem.readDirectory(ASSETS_DIR)) {
-            File.copy(ASSETS_DIR + "/" + file, OUT_DIR + "/" + file);
+            copyRec(ASSETS_DIR + "/" + file, OUT_DIR + "/" + file);
+        }
+    }
+
+    static function copyRec(from:String, to:String):Void {
+        if (FileSystem.isDirectory(from)) {
+            if (!FileSystem.exists(to))
+                FileSystem.createDirectory(to);
+            for (file in FileSystem.readDirectory(from))
+                copyRec(from + "/" + file, to + "/" + file);
+        } else {
+            File.copy(from, to);
         }
     }
 
