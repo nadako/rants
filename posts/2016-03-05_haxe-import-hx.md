@@ -1,7 +1,7 @@
 [tags]: haxe
 [disqus]: 140498695225
 
-**UPDATE**: I added this post to the new Haxe.org blog: http://haxe.org/blog/importhx-intro
+**UPDATE**: I added this post to the new Haxe.org blog: <http://haxe.org/blog/importhx-intro>
 
 # New feature in Haxe language: `import.hx`
 
