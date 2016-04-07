@@ -3,7 +3,7 @@
 
 # A success story for Haxe
 
-**NOTE: Я выложил [русский перевод](http://nadako.tumblr.com/post/114624037180/haxe-success-russian) этой статьи.**
+**NOTE: Я выложил [русский перевод](./2015-03-26_haxe-success-russian.html) этой статьи.**
 
 As some may know, I'm a big fan of [Haxe](http://haxe.org/) and I'm actively trying to contribute to its development. But how I got here is (I think) quite an interesting story which may be even called "success story" for Haxe, so let me tell it. :-)
 

@@ -13,40 +13,44 @@ Finally, you define @:to functions that create concrete classes. These functions
 
 Well, example is worth a thousand words, so here you are:
 
-    interface IA<T>
-    {
-    }
+```haxe
+interface IA<T>
+{
+}
 
-    class StringA implements IA<String>
-    {
-        public function new() {}
-    }
+class StringA implements IA<String>
+{
+    public function new() {}
+}
 
-    @:multiType
-    abstract A<T>(IA<T>)
-    {
-        public function new();
+@:multiType
+abstract A<T>(IA<T>)
+{
+    public function new();
 
-        @:to static inline function toStringA(t:IA<String>):StringA
-        {
-            return new StringA();
-        }
-    }
-
-    class Sample
+    @:to static inline function toStringA(t:IA<String>):StringA
     {
-        static function main()
-        {
-            var a = new A<String>();
-        }
+        return new StringA();
     }
+}
+
+class Sample
+{
+    static function main()
+    {
+        var a = new A<String>();
+    }
+}
+```
 
 The `main` function will be compiled to this (javascript):
 
 
-    Sample.main = function() {
-    	var a = new StringA();
-    }
+```js
+Sample.main = function() {
+	var a = new StringA();
+}
+```
 
 This feature is quite useful when you want to abstract multiple implementations depending on type (like it's done with Map), but it wasn't really documented, so I had to read some sources and experiment.
 

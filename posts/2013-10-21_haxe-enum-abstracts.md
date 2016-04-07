@@ -11,31 +11,39 @@ This is very useful in many cases where you want to define a finite set of value
 
 So, for example you want to define a set of string constants. You define an `abstract` over `String` and mark it with `@:enum` metadata. Inside that abstract, you can define values with simple var syntax:
 
-    @:enum
-    abstract State(String)
-    {
-        var Idle = "idle";
-        var Move = "move";
-        var Attack = "attack";
-    }
+```haxe
+@:enum
+abstract State(String)
+{
+    var Idle = "idle";
+    var Move = "move";
+    var Attack = "attack";
+}
+```
 
 As you may know, `abstracts` are compile-time types that don't really exist in runtime, so in runtime, our real type will be a simple string, as we defined, but in compile-time, we can define variables with type `State` and compiler will check that only values of that type is assigned to the variable. And guess what? That `vars` we defined in the abstract are actually of `State` type thanks to `@:enum`.
 
 We use it like that:
 
-    var state = State.Idle;
+```haxe
+var state = State.Idle;
+```
 
 We can't assign some casual string to this variable:
 
-    state = "other"; // ERROR: String should be State
+```haxe
+state = "other"; // ERROR: String should be State
+```
 
 Also, haxe compiler will show error when trying to switch over a `enum abstract` if we don't specify all cases, just like with normal enums:
 
-    switch (state)
-    {
-        case Idle:
-        // ERROR: Unmatched patterns: Move | Attack
-    }
+```haxe
+switch (state)
+{
+    case Idle:
+    // ERROR: Unmatched patterns: Move | Attack
+}
+```
 
 Inside the code, this stuff is done with a `build macro` and very little compiler magic (basically @:enum becomes a @:build meta, and in `switch` handling there's a special case for `enum abstracts`, that's all).
 

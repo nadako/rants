@@ -17,4 +17,4 @@ After that add Cygwin bin path to your PATH variable (C:\cygwin\bin on my machin
 
 One thing though, you also need to build haxelib which is done by running __make -f Makefile.win haxelib__. However, this didn't work for me becase Cygwin uses unix-style paths while haxe.exe doesn't understand them, because well, it's a windows application :)
 
-I created a pull request for that issue, but at the moment, you can apply changes from my commit here: https://github.com/nadako/haxe/commit/cd7704a9876fc749365d1382bf0041de31f83c57
+I created a pull request for that issue, but at the moment, you can apply changes from my commit here: <https://github.com/nadako/haxe/commit/cd7704a9876fc749365d1382bf0041de31f83c57>

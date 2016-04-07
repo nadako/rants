@@ -4,7 +4,7 @@
 
 # История успеха с Haxe
 
-**NOTE: This is a russian translation of my [original article](http://nadako.tumblr.com/post/113390739725/a-success-story-for-haxe) about Haxe.**
+**NOTE: This is a russian translation of my [original article](./2015-03-12_haxe-success.html) about Haxe.**
 
 Многие знают, что я большой фанат [Haxe](http://haxe.org/) и стараюсь активно участвовать в его разработке. Но история о том как я до этого дошел (я думаю) довольно интересна, её даже можно назвать "историей успеха" Haxe, так что давайте я расскажу. :-)
 

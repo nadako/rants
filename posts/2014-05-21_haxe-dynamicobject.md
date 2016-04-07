@@ -9,71 +9,77 @@ Haxe provides no specific type representing this concept out-of-the-box and one 
 
 In my code, I use the following `abstract` type that provides `Map`-like API over dynamic structures by wrapping `Reflect` calls:
 
-    abstract DynamicObject<T>(Dynamic<T>) from Dynamic<T> {
+```haxe
+abstract DynamicObject<T>(Dynamic<T>) from Dynamic<T> {
 
-        public inline function new() {
-            this = {};
-        }
-
-        @:arrayAccess
-        public inline function set(key:String, value:T):Void {
-            Reflect.setField(this, key, value);
-        }
-
-        @:arrayAccess
-        public inline function get(key:String):Null<T> {
-            #if js
-            return untyped this[key];
-            #else
-            return Reflect.field(this, key);
-            #end
-        }
-
-        public inline function exists(key:String):Bool {
-            return Reflect.hasField(this, key);
-        }
-
-        public inline function remove(key:String):Bool {
-            return Reflect.deleteField(this, key);
-        }
-
-        public inline function keys():Array<String> {
-            return Reflect.fields(this);
-        }
+    public inline function new() {
+        this = {};
     }
-	
+
+    @:arrayAccess
+    public inline function set(key:String, value:T):Void {
+        Reflect.setField(this, key, value);
+    }
+
+    @:arrayAccess
+    public inline function get(key:String):Null<T> {
+        #if js
+        return untyped this[key];
+        #else
+        return Reflect.field(this, key);
+        #end
+    }
+
+    public inline function exists(key:String):Bool {
+        return Reflect.hasField(this, key);
+    }
+
+    public inline function remove(key:String):Bool {
+        return Reflect.deleteField(this, key);
+    }
+
+    public inline function keys():Array<String> {
+        return Reflect.fields(this);
+    }
+}
+```
+
 Let's see how its usage looks like and what it generates:
 
-    class Main {
-        static function main() {
-            var a:DynamicObject<Int> = {field1: 1, field2: 2}; // implicit cast supported by "from Dynamic<T>"
+```haxe
+class Main {
+    static function main() {
+        var a:DynamicObject<Int> = {field1: 1, field2: 2}; // implicit cast supported by "from Dynamic<T>"
 
-            var f = "field3";
-            if (!a.exists(f))
-                a[f] = 3;
+        var f = "field3";
+        if (!a.exists(f))
+            a[f] = 3;
 
-            for (key in a.keys()) {
-                trace(a[key]);
-                a.remove(key);
-            }
+        for (key in a.keys()) {
+            trace(a[key]);
+            a.remove(key);
         }
     }
+}
+```
 
 Here's what generated JS looks like for the `main` function:
 
-	Main.main = function() {
-		var a = { field1 : 1, field2 : 2};
-		var f = "field3";
-		if(!Object.prototype.hasOwnProperty.call(a,f)) a[f] = 3;
-		var _g = 0;
-		var _g1 = Reflect.fields(a);
-		while(_g < _g1.length) {
-			var key = _g1[_g];
-			++_g;
-			console.log(a[key]);
-			Reflect.deleteField(a,key);
-		}
-	};
+```js
+Main.main = function() {
+	var a = { field1 : 1, field2 : 2};
+	var f = "field3";
+	if(!Object.prototype.hasOwnProperty.call(a,f)) a[f] = 3;
+	var _g = 0;
+	var _g1 = Reflect.fields(a);
+	while(_g < _g1.length) {
+		var key = _g1[_g];
+		++_g;
+		console.log(a[key]);
+		Reflect.deleteField(a,key);
+	}
+};
+```
 
 As you can see it's pretty the same as if you've worked with `Dynamic` and `Reflect` by hand, but it's much easier and strictly typed.
 

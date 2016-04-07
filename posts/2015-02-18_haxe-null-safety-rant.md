@@ -11,14 +11,16 @@ In languages like OCaml, there is simply no such concept as null, and any variab
 
 What I would like to see in Haxe 4 very much is strict separation between `T` and `Null<T>`, which means that one CANNOT assign or compare `T` with `null`, AND one cannot implicitly unify `Null<T>` with `T`, i.e.:
 
-    var a:Int = null; // ERROR on every platform, including dynamic ones
-    var a:Null<Int> = null; // OK
-    var b:Int = a; // ERROR: Null<Int> should be Int
-    var b = a.get(); // OK, b is typed as Int, an exception is thrown if a is null
-    var c:Null<Int> = b; // OK
-    
-    var a = "hello";
-    if (a == null) {} // ERROR: a is String, but should be Null<String> to be compared with null
+```haxe
+var a:Int = null; // ERROR on every platform, including dynamic ones
+var a:Null<Int> = null; // OK
+var b:Int = a; // ERROR: Null<Int> should be Int
+var b = a.get(); // OK, b is typed as Int, an exception is thrown if a is null
+var c:Null<Int> = b; // OK
+
+var a = "hello";
+if (a == null) {} // ERROR: a is String, but should be Null<String> to be compared with null
+```
 
 God, I'd even fork Haxe to have that.
 
