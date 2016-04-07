@@ -1,5 +1,6 @@
 [tags]: haxe
 [disqus]: 78645101794
+[lang]: ru
 
 # Вышел Haxe 3.1!
 

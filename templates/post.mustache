@@ -1,7 +1,7 @@
 {{<layout}}
 {{$title}}{{post.title}}{{/title}}
 {{$content}}
-<article>
+<article{{#post.lang}} lang="{{.}}"{{/post.lang}}>
     <header>
         <h2>{{{post.title}}}</h2>
         <p>

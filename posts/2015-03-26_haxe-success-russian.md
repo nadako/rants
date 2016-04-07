@@ -1,5 +1,6 @@
 [tags]: haxe,javascript,node,flash,actionscript,ocaml,gamedev,successtory
 [disqus]: 114624037180
+[lang]: ru
 
 # История успеха с Haxe
 

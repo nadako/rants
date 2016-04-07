@@ -13,6 +13,7 @@ class Post {
     public var date:Date;
     public var slug:String;
     public var disqusId:String;
+    public var lang:String;
 
     public function dateStr() return DateTools.format(date, "%F");
 }
@@ -77,11 +78,16 @@ class Main {
         var lines = ~/(\r\n|\r)/g.replace(source, '\n').split("\n");
         document.parseRefLinks(lines);
 
-        var tagsLink = document.refLinks["tags"];
-        var tags = if (tagsLink == null) [] else tagsLink.url.split(",");
+        inline function meta(name) {
+            var link = document.refLinks[name];
+            return if (link == null) null else link.url;
+        }
 
-        var disqusIdLink = document.refLinks["disqus"];
-        var disqusId = if (disqusIdLink != null) disqusIdLink.url else throw 'Post at $path doesnt have the [disqus] tag'; // TODO: generate one and save
+        var tags = meta("tags");
+        var tags = if (tags == null) [] else tags.split(",");
+
+        var disqusId = meta("disqus");
+        if (disqusId == null) throw 'Post at $path doesnt have the [disqus] tag'; // TODO: generate one and save
 
         var title = null;
         var blocks = document.parseLines(lines);
@@ -101,7 +107,8 @@ class Main {
             tags: tags,
             date: date,
             slug: postFilenameRe.matched(1),
-            disqusId: disqusId
+            disqusId: disqusId,
+            lang: meta("lang")
         };
     }
 }

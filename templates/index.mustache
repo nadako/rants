@@ -3,7 +3,7 @@
 {{$content}}
     <section class="index-posts">
         {{#posts}}
-        <article>
+        <article{{#lang}} lang="{{.}}"{{/lang}}>
             <header>
                 <h2><a href="{{relDir}}/posts/{{slug}}.html">{{{title}}}</a></h2>
             </header>
