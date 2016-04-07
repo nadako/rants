@@ -7,6 +7,8 @@ using StringTools;
 
 @:structInit
 class Post {
+    static inline var BASE_URL = "http://nadako.github.io/rants";
+
     public var title:String;
     public var content:String;
     public var tags:Array<String>;
@@ -16,6 +18,7 @@ class Post {
     public var lang:String;
 
     public function dateStr() return DateTools.format(date, "%F");
+    public function disqusUrl() return '$BASE_URL/posts/$slug.html';
 }
 
 class Main {
