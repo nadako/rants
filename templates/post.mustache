@@ -1,24 +1,20 @@
 {{<layout}}
 {{$title}}{{post.title}}{{/title}}
 {{$content}}
-<article class="post"{{#post.lang}} lang="{{.}}"{{/post.lang}}>
-    <header>
-        <h1>{{{post.title}}}</h1>
-    </header>
-    <footer>
-        <p>
-            <time datetime="{{post.dateStr}}">Published on {{post.dateStr}}</time>
-        </p>
-        <p class="tags">
-            {{#post.tags}}#{{.}} {{/post.tags}}
-        </p>
-    </footer>
-    <section>
-        {{{post.content}}}
-    </section>
-</article>
-<div id="disqus_thread"></div>
-<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+        <article class="post"{{#post.lang}} lang="{{.}}"{{/post.lang}}>
+            <header>
+                <h1>{{{post.title}}}</h1>
+                <section class="post-meta">
+                    <time datetime="{{post.dateStr}}">Published on {{post.dateStr}}</time>
+                    <span class="tags">{{#post.tags}}#{{.}} {{/post.tags}}</span>
+                </section>
+            </header>
+            <section>
+                {{{post.content}}}
+            </section>
+        </article>
+        <div id="disqus_thread"></div>
+        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
 {{/content}}
 {{$scripts}}
 <script>
