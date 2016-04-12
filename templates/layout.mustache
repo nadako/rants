@@ -20,13 +20,13 @@
     <div class="content">
         {{$content}}{{/content}}
     </div>
-    <aside class="sidebar">
+    <aside class="sidebar" itemscope itemtype="http://schema.org/Person">
         <article id="about">
-            <h2>Dan Korostelev</h2>
+            <h2 itemprop="name"><span itemprop="givenName">Dan</span> <span itemprop="familyName">Korostelev</span></h2>
             <section>
-                <img src="{{relDir}}/photo.jpg" alt="My photo" id="my-photo" />
-                <p>
-                    Passionate programmer from St.Petersburg, Russia.
+                <img src="{{relDir}}/photo.jpg" alt="My photo" id="my-photo" itemprop="image" />
+                <p itemprop="description">
+                    Passionate <span itemprop="jobTitle">programmer</span> from St.Petersburg, Russia.
                     Loves open-source, game development and <a href="http://haxe.org">Haxe</a>!
                 </p>
             </section>
@@ -37,7 +37,7 @@
                 <ul>
                     <li><a title="GitHub" href="https://github.com/nadako"><i class="fa fa-lg fa-github"></i></a></li>
                     <li><a title="LinkedIn" href="https://www.linkedin.com/in/nadako"><i class="fa fa-lg fa-linkedin"></i></a></li>
-                    <li><a title="Email" href="mailto:nadako@gmail.com"><i class="fa fa-lg fa-envelope"></i></a></li>
+                    <li><a title="Email" href="mailto:nadako@gmail.com" itemprop="email"><i class="fa fa-lg fa-envelope"></i></a></li>
                     <li><a title="Twitter" href="https://twitter.com/nadako"><i class="fa fa-lg fa-twitter"></i></a></li>
                 </ul>
             </section>
