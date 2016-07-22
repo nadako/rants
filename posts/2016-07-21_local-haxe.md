@@ -53,14 +53,14 @@ So here's what our directory hierarchy looks like:
         * hxcs/
         * hxnodejs/
         * etc...
-    * neko-2.0.0-osx/
-    * neko-2.0.0-win/
-    * std/
-    * haxe (osx executable)
-    * haxelib (osx executable)
-    * haxe.exe (win executable)
-    * haxelib.exe (win executable)
-    * zlib1.dll (needed this for windows because of how I build haxe)
+      * neko-2.0.0-osx/
+      * neko-2.0.0-win/
+      * std/
+      * haxe (osx executable)
+      * haxelib (osx executable)
+      * haxe.exe (win executable)
+      * haxelib.exe (win executable)
+      * zlib1.dll (needed this for windows because of how I build haxe)
 ```
 
 Hope this helps, feel free to ask more in comments!
