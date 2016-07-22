@@ -109,7 +109,7 @@ class Main {
 
         inline function i(n) return Std.parseInt(postFilenameRe.matched(n));
 
-        var date = new Date(i(2), i(3), i(4), 0, 0, 0);
+        var date = new Date(i(2), i(3) - 1, i(4), 0, 0, 0);
 
         var source = File.getContent(path);
         var document = new Document();
