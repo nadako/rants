@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>nadako - A success story for Haxe</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.0.0/normalize.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="../github.css">
+    <link rel="alternate" type="application/atom+xml" title="nadako's rants" href="../atom.xml">
+</head>
+<body>
+
+<header class="main-header">
+    <h1><a href="../index.html" title="Go to the main page">nadako's rants</a></h1>
+</header>
+
+ <div class="main">
+    <div class="content">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+            <header>
+                <h1 itemprop="headline">A success story for Haxe</h1>
+                <section class="post-meta">
+                    <time itemprop="datePublished" datetime="2015-03-12">Published on 2015-03-12</time>
+                    <span class="tags">#haxe #javascript #node #flash #actionscript #ocaml #gamedev #successtory </span>
+                </section>
+            </header>
+            <section itemprop="articleBody">
+                <p><strong>NOTE: Я выложил <a href="./2015-03-26_haxe-success-russian.html">русский перевод</a> этой статьи.</strong></p>
+<p>As some may know, I'm a big fan of <a href="http://haxe.org/">Haxe</a> and I'm actively trying to contribute to its development. But how I got here is (I think) quite an interesting story which may be even called "success story" for Haxe, so let me tell it. :-)</p>
+<h2>A little background</h2>
+<p>To keep it short, I studied C/C++ when I was a student, then I fell in love with Python when Ubuntu started promoting it (I was a linux fan back then), so I found a job with Python and did some web programming for a while. But I always wanted to make games, so I constantly searched for a game vacancy that I was good enough for and finally ended up writing python-based server backends and admin panels for social games in Flash. Then I learned AS3 to help my colleagues with Flash front-ends and eventually became a client-side programmer in Flash/AS3 (I also coded servers for those games in Python).</p>
+<h2>Sharing code</h2>
+<p>When I was doing AS3+Python there was literally NO shared code, there was a Flash "thin client" and a Python server that calculated stuff and changed the game state. One can imagine how it was inefficient and annoying to develop/support, but I didn't knew better ways those days.</p>
+<p>Then I joined a team, who also developed Flash games in AS3, but there was this very smart guy (hi, Denis!) that actually had some knowledge and realized that AS3 is a superset of ECMAScript (JavaScript), so one could code game logic in pure javascript and then compile it with AS3 compiler for Flash client and interpret somehow on server (we used Ruby+TheRubyRacer first, then node.js).</p>
+<h2>Writing JavaScript</h2>
+<p>The idea seemed brilliant and it worked very well at first, but (midly speaking) JavaScript is not particularily good language for supporting large code bases such as ours, mostly due to its dynamic nature. It requires a lot of attention, discipline and testing to maintain a code base and keep it stable. It also required to write quite a lot of run-time checking code to make sure things won't break because of some small programmer mistake (that actually become a performance problem for us at some point).</p>
+<h2>Typing JavaScript</h2>
+<p>That's when a friend of mine told me about Haxe (2.11 at a time) and how awesome is it together with NME and can be compiled to Flash, JS and C++, etc, so I decided to take a look. After some research I was impressed by the possiblilty of generation both JS and SWF from a language syntatically similar but greatly superior to ActionScript 3.</p>
+<p>So we (with a colleague) developed a prototype build system that allowed us to gradually, bit by bit port our JS codebase to Haxe and compile it first with AS3 compiler as JS (together with not-yet-ported pieces) and when porting is complete - directly to SWF from Haxe.</p>
+<p>But that prototype was rejected by our team leader who decided to go with TypeScript which had an advantage of being a syntax superset of JavaScript and thus (theoretically) allowed to port our code much easier and also had a fancy website featuring Microsoft logo. :-)</p>
+<p>However that porting was never done and the project was terminated. I was transferred to work on a Unity-based project in the same company.</p>
+<h2>Unity</h2>
+<p>I joined an in-development Unity-based mobile game project. Its team was tasked to reuse the server and shared-logic architecture from that Flash+JS game I described above, so they came up wiring JavaScriptCore engine into an Unity game and writing game logic in JavaScript. It felt unnatural for them (hardcore unity devs/C# fans), but it worked.</p>
+<p>I received a task to make things work in Unity Web Player so we could publish on Facebook and surprisingly it was nearly impossible to do, because of JavaScript for few reasons:</p><ul><li>Unity Web Player doesn't allow native plugins such as JavaScriptCore</li><li>.NET implementations of JavaScript didn't work because of run-time code emit that was also forbidden by Unity Web Player</li><li>Re-using browser's JS engine is nearly impossible for such complex things because of async nature of <code>Unity&lt;-&gt;Browser</code> interop which conflicted with our synchronous game logic architecture. Also we certainly didn't want to deal with differences between various browsers and plugins installed by thousands of users all around the world.</li></ul>
+<h2>Pushing Haxe</h2>
+<p>I was already a (novice) Haxe fan and was trying to convince colleagues to check out its potential, however I wasn't taken seriously until that moment. I honestly searched for some ways to make that JS codebase work on Unity Web Player, but with no success.</p>
+<p>So I developed a small proof-of-concept in Haxe that basically copied our JavaScript architecture. I compiled it to C# and JavaScript to show that it could work identically in Unity Web Player, JavaScriptCore native plugin and node.js server. The results were surprising even for me - it just worked!</p>
+<p>When I showed the prototype to the lead programmer, he was quite impressed by this solution and finally decided to take a look at Haxe technology. After consulting with CTO, they decided to give it a try.</p>
+<h2>Porting from JavaScript to Haxe</h2>
+<p>Thankfully, the architecture of our JavaScript codebase wasn't insane like some of JS projects we see nowadays. It was quite simple, more Java-style, so we didn't have to think too much about how to port code to Haxe.</p>
+<p>However, the codebase was quite large already and it took time to port it. So what we did is inject haxe-generated into hand-written javascript code and make it work together, so we can port the code base bit by bit.</p>
+<p>We took a .js file, ported it to Haxe, removed the .js file and committed, so other people working on the project won't accidentally edit obsolete code. That way after two weeks of hard work we (me and my like-minded colleague, hi Misha!) had our code ported from JS to Haxe without interrupting the development of actual game by the rest of the team!</p>
+<p>At that time we didn't think much about proper typing or macro code-generation, because our main concern was to make generated code behave exactly the same as JS code, so we don't introduce bugs by porting. We reviewed generated code after each porting session and compared it to original js code. We did add types in places where it was obvious and easy to do so, but mostly the code stayed dynamic.</p>
+<h2>Fine-tuning ported code</h2>
+<p>After we finished porting JS code to Haxe, we had to make it actually compile to C# and .NET dll for use in Unity Web Player. After some minor fixes, it did compile and work fine. It was VERY satisfying, promising and it proved Haxe well, but the generated code was very ugly and inefficient, because... well, it was basically C# written in a hardcore dynamic JS-inspired style.</p>
+<p>Reviewing and profiling C# code allowed us find out that most of problems were caused by two main reasons:</p><ul><li>unnecessary casts and dynamic access</li><li>a lot of runtime dynamic value checks and data copying to prevent programmer's mistake</li></ul>
+<p>The first reason was eliminated by specifying proper types in the ported code and reducing usage of reflection. Haxe type system allowed to express everything we had in JS in a typed manner. As an AWESOME BONUS, adding proper types surfaced a number of bugs that were present in JS code but were caught by the compiler now, so we fixed them before QA (or users, what's even worse) found them.</p>
+<p>The second reason made me learn Haxe macros, I wrote several macros that allowed us to get rid of large part of runtime code, such as:</p><ul><li>compile-time validation of game configuration files (so that JSON files edited by game designers contain proper fields with proper types without typos and mistakes)</li><li>entry-point argument validation generation (so when one writes a new "command" in game logic, he can be sure that arguments, passed to the command are present and properly typed without need to write additional checking code)</li><li><a href="https://gist.github.com/nadako/9200026">compile-time-checked read-only access</a> (so we don't need to copy objects to prevent accidental modification)</li></ul>
+<p>Maybe there are more, I don't even remember now, but that's how I learned how very powerful Haxe is and how much smaller and at the same time more error-proof AND efficient can Haxe code be, compared to JavaScript and even C#.</p>
+<p>Not to mention how FUN it was to automate things. This should be satisfying for every programmer.</p>
+<h2>Developing in Haxe</h2>
+<p>While that Unity-based client is still in C#, a large part of game code is written in Haxe and they play very well together. The same story on the server - the server itself is written in JavaScript (node.js), but is using Haxe-compiled JS module with game logic. And it's working fine for two years or so now.</p>
+<p>The team was very happy to move from JavaScript (they hated it because they are mostly C# fans) to something well-typed and structured, and thanks to the compile-time checking, further development become much more stable and fast (less bugs -> less time spent on researching and fixing). Overall there are only benefits.</p>
+<h2>Spreading Haxe</h2>
+<p>Since then I changed my job, but I'm still doing games in Unity using Haxe and C#. I'm in a team, partly assembled from the same guys I worked with before, so it wasn't hard to convince them to stay with Haxe. We've developed a new version of our shared-game-logic architecture involving even more macro code generation, strict typing and compile-time validation, further reducing size of the code base and making things error-proof.</p>
+<p>So far, it's working so well that we're sharing our Haxe-based architecture with two more teams/projects within our company, so people are learning Haxe and its awesome features. That could be called "mission accomplished" for a hardcore haxe lover like myself. :-)</p>
+<h2>Professional evolution</h2>
+<p>During porting and futher development, we discovered a bunch of bugs and bottlenecks in Haxe standard library and compiler itself. First I reported them on GitHub and thought of workarounds, but at some point I thought to myself: "I'm a fairly good programmer and Haxe is an open-source project, so why should I wait for someone to come and fix things? Couldn't I just fix them myself?"</p>
+<p>It wasn't easy for me, as I found out that Haxe is written in OCaml and I had little to no experience with it or functional programming in general. Also I had very little idea how a compiler works, so I just started reading parts of Haxe source code at evenings, keeping OCaml manual open in a separate browser tab, I joined #haxe IRC channel to meet haxe developers who were welcoming and VERY helpful in my quest to understanding OCaml code and how haxe works (thanks, Simon and Caue!).</p>
+<p>I discovered so many awesome techniques that are unusual in JS/AS3/C# world, such as null safety, algebraic data types, pattern matching and immutability, type inference, structural typing. What's even more satisfying is that these things are either already present and ready-to-use in Haxe or could be implemented fairly easy with macros.</p>
+<p>I learned what's REAL strict typing, new programming paradigms, how to better structure your code, how compilers work, how awesome could compile-time checking be, not to mention new programming language. This really made me a better programmer, unlike working with Unity (hehe).</p>
+<p>Also I'm an active contributor to an open-source project now and am pretty proud of myself!</p>
+            </section>
+        </article>
+        <div id="disqus_thread"></div>
+        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+    </div>
+    <aside class="sidebar" itemscope itemtype="http://schema.org/Person">
+        <article id="about">
+            <h2 itemprop="name"><span itemprop="givenName">Dan</span> <span itemprop="familyName">Korostelev</span></h2>
+            <section>
+                <img src="../photo.jpg" alt="My photo" id="my-photo" itemprop="image" />
+                <p itemprop="description">
+                    Passionate <span itemprop="jobTitle">programmer</span> from St.Petersburg, Russia.
+                    Loves open-source, game development and <a href="http://haxe.org">Haxe</a>!
+                </p>
+            </section>
+        </article>
+        <article id="links">
+            <h2>Links</h2>
+            <section>
+                <ul>
+                    <li><a title="GitHub" href="https://github.com/nadako"><i class="fa fa-lg fa-github"></i></a></li>
+                    <li><a title="LinkedIn" href="https://www.linkedin.com/in/nadako"><i class="fa fa-lg fa-linkedin"></i></a></li>
+                    <li><a title="Email" href="mailto:nadako@gmail.com" itemprop="email"><i class="fa fa-lg fa-envelope"></i></a></li>
+                    <li><a title="Twitter" href="https://twitter.com/nadako"><i class="fa fa-lg fa-twitter"></i></a></li>
+                </ul>
+                <p>
+                    <a title="Patreon" href="https://patreon.com/nadako">Support me on Patreon!</a>
+                </p>
+                <p>
+                    <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+                        <input type="hidden" name="cmd" value="_s-xclick">
+                        <input type="hidden" name="encrypted" value="-----BEGIN PKCS7-----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-----END PKCS7-----
+                        ">
+                        <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+                        <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+                    </form>
+                </p>
+            </section>
+        </article>
+    </aside>
+</div>
+
+<footer class="main-footer">
+    <p>
+        <a href="#">Back to top</a>
+    </p>
+</footer>
+
+<script>
+var disqus_config = function() {
+    this.page.url = "http://nadako.github.io/rants/posts/2015-03-12_haxe-success.html";
+    this.page.identifier = "113390739725";
+};
+(function() {
+var d = document, s = d.createElement('script');
+s.src = 'https://nadako.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<script src="../highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-75978661-1', 'auto');
+  ga('send', 'pageview');
+</script>
+</body>
+</html>

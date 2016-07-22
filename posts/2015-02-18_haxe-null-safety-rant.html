@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>nadako - Please Haxe, give null safety!</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.0.0/normalize.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="../github.css">
+    <link rel="alternate" type="application/atom+xml" title="nadako's rants" href="../atom.xml">
+</head>
+<body>
+
+<header class="main-header">
+    <h1><a href="../index.html" title="Go to the main page">nadako's rants</a></h1>
+</header>
+
+ <div class="main">
+    <div class="content">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+            <header>
+                <h1 itemprop="headline">Please Haxe, give null safety!</h1>
+                <section class="post-meta">
+                    <time itemprop="datePublished" datetime="2015-02-18">Published on 2015-02-18</time>
+                    <span class="tags">#haxe </span>
+                </section>
+            </header>
+            <section itemprop="articleBody">
+                <p>As you may know, I like Haxe so much that I'm using it everywhere and joined its dev team to make it even better. But there are a couple of things that are constantly bugging me and don't seem to be justified by the need to compile to multiple targets. One of them is that there's basically no <em>null safety</em> in Haxe.</p>
+<p>I hate <code>null</code> very much. The main reason is because one can never be sure if a given variable is <code>null</code> or not at any level in the code, and there's no way to explicitly separate <code>null</code>-able variables from non-<code>null</code>-able ones. So one have to either check function arguments and return values for <code>null</code> in run-time or just document it hope that noone will pass <code>null</code> where it's unexpected (which will most likely happen at some moment anyways).</p>
+<p>In languages like OCaml, there is simply no such concept as null, and any variable/constant/whatever does always have a value. If one needs to express the absence of a value, an <code>Option&lt;T&gt;</code> type is used, which can have two possible values: <code>None</code> and <code>Some(value:T)</code>. This makes away a whole category of run-time errors from a program and makes the code much more explicit, and compile-time checked.</p>
+<p>What I would like to see in Haxe 4 very much is strict separation between <code>T</code> and <code>Null&lt;T&gt;</code>, which means that one CANNOT assign or compare <code>T</code> with <code>null</code>, AND one cannot implicitly unify <code>Null&lt;T&gt;</code> with <code>T</code>, i.e.:</p>
+<pre><code class="prettyprint haxe">var a:Int = null; // ERROR on every platform, including dynamic ones
+var a:Null&lt;Int&gt; = null; // OK
+var b:Int = a; // ERROR: Null&lt;Int&gt; should be Int
+var b = a.get(); // OK, b is typed as Int, an exception is thrown if a is null
+var c:Null&lt;Int&gt; = b; // OK
+
+var a = "hello";
+if (a == null) {} // ERROR: a is String, but should be Null&lt;String&gt; to be compared with null</code></pre>
+<p>God, I'd even fork Haxe to have that.</p>
+<p>What would also be very nice, but not cruicial is to have syntax sugar for working with nullable types, similar to how it's done in Apple Swift's optionals.</p>
+<p>There are <em>some</em> ways to make this happen in current Haxe using <a href="https://bitbucket.org/waneck/taurine-core/src/e7063b660655522b362359e283cdd0d9609ec59e/src/taurine/Option.hx?at=master">abstracts</a> and/or macros, but it still doesn't protect you enough from having null errors. In my opinion, this MUST be a core language feature.</p>
+            </section>
+        </article>
+        <div id="disqus_thread"></div>
+        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+    </div>
+    <aside class="sidebar" itemscope itemtype="http://schema.org/Person">
+        <article id="about">
+            <h2 itemprop="name"><span itemprop="givenName">Dan</span> <span itemprop="familyName">Korostelev</span></h2>
+            <section>
+                <img src="../photo.jpg" alt="My photo" id="my-photo" itemprop="image" />
+                <p itemprop="description">
+                    Passionate <span itemprop="jobTitle">programmer</span> from St.Petersburg, Russia.
+                    Loves open-source, game development and <a href="http://haxe.org">Haxe</a>!
+                </p>
+            </section>
+        </article>
+        <article id="links">
+            <h2>Links</h2>
+            <section>
+                <ul>
+                    <li><a title="GitHub" href="https://github.com/nadako"><i class="fa fa-lg fa-github"></i></a></li>
+                    <li><a title="LinkedIn" href="https://www.linkedin.com/in/nadako"><i class="fa fa-lg fa-linkedin"></i></a></li>
+                    <li><a title="Email" href="mailto:nadako@gmail.com" itemprop="email"><i class="fa fa-lg fa-envelope"></i></a></li>
+                    <li><a title="Twitter" href="https://twitter.com/nadako"><i class="fa fa-lg fa-twitter"></i></a></li>
+                </ul>
+                <p>
+                    <a title="Patreon" href="https://patreon.com/nadako">Support me on Patreon!</a>
+                </p>
+                <p>
+                    <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+                        <input type="hidden" name="cmd" value="_s-xclick">
+                        <input type="hidden" name="encrypted" value="-----BEGIN PKCS7-----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-----END PKCS7-----
+                        ">
+                        <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+                        <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+                    </form>
+                </p>
+            </section>
+        </article>
+    </aside>
+</div>
+
+<footer class="main-footer">
+    <p>
+        <a href="#">Back to top</a>
+    </p>
+</footer>
+
+<script>
+var disqus_config = function() {
+    this.page.url = "http://nadako.github.io/rants/posts/2015-02-18_haxe-null-safety-rant.html";
+    this.page.identifier = "111320874485";
+};
+(function() {
+var d = document, s = d.createElement('script');
+s.src = 'https://nadako.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<script src="../highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-75978661-1', 'auto');
+  ga('send', 'pageview');
+</script>
+</body>
+</html>

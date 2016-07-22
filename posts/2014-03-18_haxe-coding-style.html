@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>nadako - On my haxe coding style</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.0.0/normalize.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="../github.css">
+    <link rel="alternate" type="application/atom+xml" title="nadako's rants" href="../atom.xml">
+</head>
+<body>
+
+<header class="main-header">
+    <h1><a href="../index.html" title="Go to the main page">nadako's rants</a></h1>
+</header>
+
+ <div class="main">
+    <div class="content">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+            <header>
+                <h1 itemprop="headline">On my haxe coding style</h1>
+                <section class="post-meta">
+                    <time itemprop="datePublished" datetime="2014-03-18">Published on 2014-03-18</time>
+                    <span class="tags">#haxe #codestyle </span>
+                </section>
+            </header>
+            <section itemprop="articleBody">
+                <h1>Haxe</h1>
+<p>Here's some conventions that I use for my Haxe code, with reasoning behind them, based on both writing and reading a big chunk of Haxe code. I wouldn't dare to call these "best practices", but I think the reasoning makes sense, and I'd like to see more "haxeish" code. I probably write more posts on that topic if I remember or find out something more.</p>
+<h2>public/private modifiers</h2>
+<p>I see no reason to explicitly add <code>private</code> modifier to class fields and functions, because unlike C# and AS3, in Haxe, <code>private</code> is always the default modifier (unless you change it with a <code>@:build</code>-macro of course). That said, a reader who knows this simple thing about Haxe will always expect field to be private unless it's explicitly public, so the <code>private</code> modifier becomes redundant.</p>
+<p>There's not much to say about <code>public</code>. It should be added for the fields and methods that are part of public API of your class or abstract. However I see no reason to explicitly add the <code>public</code> modifier in an interface or <code>extern</code> class declaration, as those are always public by default. I'm not even sure why private/public modifiers are allowed there, but I think there are some reasons behind that.</p>
+<p>One more thing on <code>public</code> is that if you have a class that is supposed to have mostly public fields (for example, some value-object implementation or static method collection), adding the <code>public</code> modifier can become tedious and Haxe provides a solution for that: add the <code>@:publicFields</code> meta to your class declaration and you have all your fields/methods public by default. Here you can get some use of the <code>private</code> modifier that forces a field to be private.</p>
+<h2>Explicit typing</h2>
+<h3>...in variables</h3>
+<p>It seems to me that many people coming mostly from AS3 have little idea about <a href="http://en.wikipedia.org/wiki/Type_inference">type inference</a> and always explicitly write the type of a variable. That is not necessarily a bad thing, however at some moment I came to understand that in 90% of time, the type of a variable is quite obvious from its name (if you stick to sane naming of course) and initialization expression. So, in those cases, skipping explicit type declaration actually increases code readability, especially if the type declaration is complex.</p>
+<p>For example, I find these type declarations redundant:</p>
+<pre><code class="prettyprint haxe">var count:Int = 1;
+var isValid:Bool = false;
+var itemIds:Array&lt;Int&gt; = [1, 2, 3];
+var usersByName:Map&lt;String, Array&lt;{id:String}&gt;&gt; = getUsersByName();</code></pre>
+<p>However, in some cases, I find type declarations useful for both code correctness and ease of understanding, for example when you create an empty collection to fill later:</p>
+<pre><code class="prettyprint haxe">var users:Array&lt;{id:Int, name:String}&gt; = [];
+
+for (i in 0...10) users.push({id: i, name: 'User $i'});</code></pre>
+<h3>...in class fields</h3>
+<p>For class fields that have initializers I mostly follow the convention above, especially if I have something like this:</p>
+<pre><code class="prettyprint haxe">@:publicFields
+class CommandNames
+{
+    static inline var START_GAME = "startGame";
+    static inline var ATTACK = "attack";
+    static inline var BUY_ITEM = "buyItem";
+}</code></pre>
+<p>I see absolutely no reason to repeat <code>:String</code> type declaration for every var here, like <code>static inline</code> isn't enough. :-) Also see below on how to do the above in a "Haxe way", using abstracts.</p>
+<h3>...in methods</h3>
+<p>I prefer to always explicitly specify types for function arguments and return value (even if it's <code>Void</code>). I find it good for both self-documentation and ensuring proper type checking and code generation. I have two exceptions for that tho: 1) if a function argument has a default value, the variable rule applies to it. 2) I don't specify <code>Void</code> as a return type for class constructors, because those are always <code>Void</code>.</p>
+<h2>Braces</h2>
+<h3>...on the next line</h3>
+<p>I place the opening brace on the next line, mostly because of the code-style used in last two project I have participated in. But at some point I gave it some thought and decided that I actually like that style because it gives my code some space to breath. I like separating code with empty lines for ease of reading and the new-line-braces add some additional sense to those newlines. :-)</p>
+<pre><code class="prettyprint haxe">class A
+{
+    static function main()
+    {
+        for (item in items)
+        {
+            trace(item);
+        }
+    }
+}</code></pre>
+<p>If course it's less compact, but I would have added a few empty lines in that code anyways.</p>
+<p>I don't place braces on new lines in object declarations tho, as it's not real code and should be read as a continuous data flow. This may differ for larger object declarations but those are probably should not be in code in the first place.</p>
+<pre><code class="prettyprint haxe">var obj = {
+    some: {
+        a: 10,
+        b: false,
+    }
+};</code></pre>
+<h3>...skip unneeded</h3>
+<p>I tend to omit braces for simple expressions for the sake of less ASCII-graphics in the code and I don't believe nonsense about people forgetting to add braces to loop/condition expressions when they add something there - every programmer should check their code several times after writing it and before compiling.</p>
+<pre><code class="prettyprint haxe">if (someFlag)
+    doSomeGood(values);</code></pre>
+<p>However, I always add braces in if-for/for-if cases:</p>
+<pre><code class="prettyprint haxe">for (item in items)
+{
+    if (item.isValid)
+        trace(item);
+}</code></pre>
+<p>Another thing that is not obvious for someone new to Haxe is that you can even omit braces for function declaration, as long as it is simple. That is particularly useful when defining anonymous lambda functions: </p>
+<pre><code class="prettyprint haxe">var validItems = items.filter(function(item) return item.isValid);</code></pre>
+<h2>Dynamic and Reflect</h2>
+<p>I always try to avoid these. I mean ALWAYS. With Haxe, almost everytime there is a way to do things in a properly typed manner. Type safety and compile-time checking really helps alot. However I can understand that it may not be always obvious for a newcomer how to implement things in a type-safe manner, so an advice to you guys: just ask about it on the IRC or Google Group. There are many friendly folks there that will help you for sure.</p>
+<p>More on that topic, I often see people asking about a "proper haxe way" to work with JS object, which is not very easy in Haxe since it has no type for that and actually requires to use <code>Reflect</code>. But there is a way! :-) For my project, I wrote this very simple wrapper type exactly for that purpose: <a href="https://github.com/nadako/haxe-thingies/blob/master/src/DynamicObject.hx">https://github.com/nadako/haxe-thingies/blob/master/src/DynamicObject.hx</a></p>
+<h2>Abstracts</h2>
+<p>More on type safety. Often there are cases when drastically different values are represented by the same run-time. And passing one those values to wrong functions can lead to scary things. Fortunately, Haxe has a solution for that as well: the concept of <code>abstract</code>. Basically, it's a compile-time type that is represented in run-time by a different type. That means you can define two types that are strings in run-time but are different types in compile-time and cannot be used in place of each other unless you explicitly want that.</p>
+<p>One of the uses for that are <code>enum abstracts</code>, <a href="./2013-10-21_haxe-enum-abstracts.html">described</a> in one of my previous posts.</p>
+<p>One can think of more uses for abstracts, for example: a millisecond time stamp may be represented by Float because of a large number it can contain, however you don't want to have non-integer operations for it and don't want to confuse it with some ratio value, also represented by Float.</p>
+<p>More on abstracts are here: <a href="http://haxe.org/manual/types-abstract.html">http://haxe.org/manual/types-abstract.html</a></p>
+            </section>
+        </article>
+        <div id="disqus_thread"></div>
+        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+    </div>
+    <aside class="sidebar" itemscope itemtype="http://schema.org/Person">
+        <article id="about">
+            <h2 itemprop="name"><span itemprop="givenName">Dan</span> <span itemprop="familyName">Korostelev</span></h2>
+            <section>
+                <img src="../photo.jpg" alt="My photo" id="my-photo" itemprop="image" />
+                <p itemprop="description">
+                    Passionate <span itemprop="jobTitle">programmer</span> from St.Petersburg, Russia.
+                    Loves open-source, game development and <a href="http://haxe.org">Haxe</a>!
+                </p>
+            </section>
+        </article>
+        <article id="links">
+            <h2>Links</h2>
+            <section>
+                <ul>
+                    <li><a title="GitHub" href="https://github.com/nadako"><i class="fa fa-lg fa-github"></i></a></li>
+                    <li><a title="LinkedIn" href="https://www.linkedin.com/in/nadako"><i class="fa fa-lg fa-linkedin"></i></a></li>
+                    <li><a title="Email" href="mailto:nadako@gmail.com" itemprop="email"><i class="fa fa-lg fa-envelope"></i></a></li>
+                    <li><a title="Twitter" href="https://twitter.com/nadako"><i class="fa fa-lg fa-twitter"></i></a></li>
+                </ul>
+                <p>
+                    <a title="Patreon" href="https://patreon.com/nadako">Support me on Patreon!</a>
+                </p>
+                <p>
+                    <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+                        <input type="hidden" name="cmd" value="_s-xclick">
+                        <input type="hidden" name="encrypted" value="-----BEGIN PKCS7-----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-----END PKCS7-----
+                        ">
+                        <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+                        <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+                    </form>
+                </p>
+            </section>
+        </article>
+    </aside>
+</div>
+
+<footer class="main-footer">
+    <p>
+        <a href="#">Back to top</a>
+    </p>
+</footer>
+
+<script>
+var disqus_config = function() {
+    this.page.url = "http://nadako.github.io/rants/posts/2014-03-18_haxe-coding-style.html";
+    this.page.identifier = "79958903007";
+};
+(function() {
+var d = document, s = d.createElement('script');
+s.src = 'https://nadako.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<script src="../highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-75978661-1', 'auto');
+  ga('send', 'pageview');
+</script>
+</body>
+</html>

@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+<title>nadako&#39;s rants</title>
+<link href="http://nadako.github.io/rants/"/>
+<updated>2016-07-22T00:00:00Z</updated>
+<author>
+  <name>Dan Korostelev</name>
+  <email>nadako@gmail.com</email>
+</author>
+<id>tag:nadako.github.io,2016:/rants</id>
+
+<entry>
+  <title>Is Haxe for you?</title>
+  <link href="http://nadako.github.io/rants/posts/2016-07-22_is-haxe-for-you.html"/>
+  <id>tag:nadako.github.io,2016-07-22:/rants/2016-07-22_is-haxe-for-you.html</id>
+  <updated>2016-07-22T00:00:00Z</updated>
+  <summary>Is Haxe for you?</summary>
+</entry>
+<entry>
+  <title>Project-local Haxe installation (how I did it)</title>
+  <link href="http://nadako.github.io/rants/posts/2016-07-21_local-haxe.html"/>
+  <id>tag:nadako.github.io,2016-07-21:/rants/2016-07-21_local-haxe.html</id>
+  <updated>2016-07-21T00:00:00Z</updated>
+  <summary>Project-local Haxe installation (how I did it)</summary>
+</entry>
+<entry>
+  <title>My opinon on what Haxe should move towards to</title>
+  <link href="http://nadako.github.io/rants/posts/2016-06-21_haxe-next.html"/>
+  <id>tag:nadako.github.io,2016-06-21:/rants/2016-06-21_haxe-next.html</id>
+  <updated>2016-06-21T00:00:00Z</updated>
+  <summary>My opinon on what Haxe should move towards to</summary>
+</entry>
+<entry>
+  <title>New feature in Haxe language: &lt;code&gt;import.hx&lt;&#x2F;code&gt;</title>
+  <link href="http://nadako.github.io/rants/posts/2016-03-05_haxe-import-hx.html"/>
+  <id>tag:nadako.github.io,2016-03-05:/rants/2016-03-05_haxe-import-hx.html</id>
+  <updated>2016-03-05T00:00:00Z</updated>
+  <summary>New feature in Haxe language: &lt;code&gt;import.hx&lt;&#x2F;code&gt;</summary>
+</entry>
+<entry>
+  <title>История успеха с Haxe</title>
+  <link href="http://nadako.github.io/rants/posts/2015-03-26_haxe-success-russian.html"/>
+  <id>tag:nadako.github.io,2015-03-26:/rants/2015-03-26_haxe-success-russian.html</id>
+  <updated>2015-03-26T00:00:00Z</updated>
+  <summary>История успеха с Haxe</summary>
+</entry>
+<entry>
+  <title>A success story for Haxe</title>
+  <link href="http://nadako.github.io/rants/posts/2015-03-12_haxe-success.html"/>
+  <id>tag:nadako.github.io,2015-03-12:/rants/2015-03-12_haxe-success.html</id>
+  <updated>2015-03-12T00:00:00Z</updated>
+  <summary>A success story for Haxe</summary>
+</entry>
+<entry>
+  <title>Please Haxe, give null safety!</title>
+  <link href="http://nadako.github.io/rants/posts/2015-02-18_haxe-null-safety-rant.html"/>
+  <id>tag:nadako.github.io,2015-02-18:/rants/2015-02-18_haxe-null-safety-rant.html</id>
+  <updated>2015-02-18T00:00:00Z</updated>
+  <summary>Please Haxe, give null safety!</summary>
+</entry>
+<entry>
+  <title>Haxe: working with dynamic anonymous structures in a typed way</title>
+  <link href="http://nadako.github.io/rants/posts/2014-05-21_haxe-dynamicobject.html"/>
+  <id>tag:nadako.github.io,2014-05-21:/rants/2014-05-21_haxe-dynamicobject.html</id>
+  <updated>2014-05-21T00:00:00Z</updated>
+  <summary>Haxe: working with dynamic anonymous structures in a typed way</summary>
+</entry>
+<entry>
+  <title>On my haxe coding style</title>
+  <link href="http://nadako.github.io/rants/posts/2014-03-18_haxe-coding-style.html"/>
+  <id>tag:nadako.github.io,2014-03-18:/rants/2014-03-18_haxe-coding-style.html</id>
+  <updated>2014-03-18T00:00:00Z</updated>
+  <summary>On my haxe coding style</summary>
+</entry>
+<entry>
+  <title>Вышел Haxe 3.1!</title>
+  <link href="http://nadako.github.io/rants/posts/2014-03-05_haxe-31-is-here-russian.html"/>
+  <id>tag:nadako.github.io,2014-03-05:/rants/2014-03-05_haxe-31-is-here-russian.html</id>
+  <updated>2014-03-05T00:00:00Z</updated>
+  <summary>Вышел Haxe 3.1!</summary>
+</entry>
+<entry>
+  <title>Haxe 3.1 is here!</title>
+  <link href="http://nadako.github.io/rants/posts/2014-03-04_haxe-31-is-here.html"/>
+  <id>tag:nadako.github.io,2014-03-04:/rants/2014-03-04_haxe-31-is-here.html</id>
+  <updated>2014-03-04T00:00:00Z</updated>
+  <summary>Haxe 3.1 is here!</summary>
+</entry>
+<entry>
+  <title>New Haxe feature - @:genericBuild</title>
+  <link href="http://nadako.github.io/rants/posts/2014-02-25_haxe-genericbuild.html"/>
+  <id>tag:nadako.github.io,2014-02-25:/rants/2014-02-25_haxe-genericbuild.html</id>
+  <updated>2014-02-25T00:00:00Z</updated>
+  <summary>New Haxe feature - @:genericBuild</summary>
+</entry>
+<entry>
+  <title>Using haxe macros as syntax-tolerant, position-aware json parser</title>
+  <link href="http://nadako.github.io/rants/posts/2014-02-19_haxe-macro-json-parser.html"/>
+  <id>tag:nadako.github.io,2014-02-19:/rants/2014-02-19_haxe-macro-json-parser.html</id>
+  <updated>2014-02-19T00:00:00Z</updated>
+  <summary>Using haxe macros as syntax-tolerant, position-aware json parser</summary>
+</entry>
+<entry>
+  <title>Multi-type abstracts in haxe</title>
+  <link href="http://nadako.github.io/rants/posts/2013-11-10_haxe-multi-type-abstracts.html"/>
+  <id>tag:nadako.github.io,2013-11-10:/rants/2013-11-10_haxe-multi-type-abstracts.html</id>
+  <updated>2013-11-10T00:00:00Z</updated>
+  <summary>Multi-type abstracts in haxe</summary>
+</entry>
+<entry>
+  <title>Building Haxe on Windows</title>
+  <link href="http://nadako.github.io/rants/posts/2013-11-02_haxe-building-on-windows.html"/>
+  <id>tag:nadako.github.io,2013-11-02:/rants/2013-11-02_haxe-building-on-windows.html</id>
+  <updated>2013-11-02T00:00:00Z</updated>
+  <summary>Building Haxe on Windows</summary>
+</entry>
+<entry>
+  <title>Cool feature of upcoming Haxe 3.2: enum abstracts.</title>
+  <link href="http://nadako.github.io/rants/posts/2013-10-21_haxe-enum-abstracts.html"/>
+  <id>tag:nadako.github.io,2013-10-21:/rants/2013-10-21_haxe-enum-abstracts.html</id>
+  <updated>2013-10-21T00:00:00Z</updated>
+  <summary>Cool feature of upcoming Haxe 3.2: enum abstracts.</summary>
+</entry>
+<entry>
+  <title>Roguelike</title>
+  <link href="http://nadako.github.io/rants/posts/2013-03-26_roguelike.html"/>
+  <id>tag:nadako.github.io,2013-03-26:/rants/2013-03-26_roguelike.html</id>
+  <updated>2013-03-26T00:00:00Z</updated>
+  <summary>Roguelike</summary>
+</entry>
+<entry>
+  <title>Turn-based time scheduling</title>
+  <link href="http://nadako.github.io/rants/posts/2013-03-26_roguelike-turn-based-time-scheduling.html"/>
+  <id>tag:nadako.github.io,2013-03-26:/rants/2013-03-26_roguelike-turn-based-time-scheduling.html</id>
+  <updated>2013-03-26T00:00:00Z</updated>
+  <summary>Turn-based time scheduling</summary>
+</entry>
+<entry>
+  <title>Pour some dungeon features and message log. :)</title>
+  <link href="http://nadako.github.io/rants/posts/2012-03-12_roguelike-progress.html"/>
+  <id>tag:nadako.github.io,2012-03-12:/rants/2012-03-12_roguelike-progress.html</id>
+  <updated>2012-03-12T00:00:00Z</updated>
+  <summary>Pour some dungeon features and message log. :)</summary>
+</entry>
+<entry>
+  <title>Thanks eight2empire for awesome tileset I can use for developing my little game.</title>
+  <link href="http://nadako.github.io/rants/posts/2012-03-03_roguelike-tiles.html"/>
+  <id>tag:nadako.github.io,2012-03-03:/rants/2012-03-03_roguelike-tiles.html</id>
+  <updated>2012-03-03T00:00:00Z</updated>
+  <summary>Thanks eight2empire for awesome tileset I can use for developing my little game.</summary>
+</entry>
+
+</feed>

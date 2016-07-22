@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>nadako - My opinon on what Haxe should move towards to</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.0.0/normalize.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="../github.css">
+    <link rel="alternate" type="application/atom+xml" title="nadako's rants" href="../atom.xml">
+</head>
+<body>
+
+<header class="main-header">
+    <h1><a href="../index.html" title="Go to the main page">nadako's rants</a></h1>
+</header>
+
+ <div class="main">
+    <div class="content">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+            <header>
+                <h1 itemprop="headline">My opinon on what Haxe should move towards to</h1>
+                <section class="post-meta">
+                    <time itemprop="datePublished" datetime="2016-06-21">Published on 2016-06-21</time>
+                    <span class="tags">#haxe </span>
+                </section>
+            </header>
+            <section itemprop="articleBody">
+                <p>I want to talk about what in my opinion should be done for Haxe in near-ish future. Haxe is in pretty good shape, so I don't think it needs a rewrite or anything, it is more about polishing and modernizing. Please note that what I'm going to write next is just my opinion, so feel free to reasonably disagree. :) Also note that I'll be mostly talking about technical stuff that requires good Haxe knowledge, so if you're new this might not make sense to you.</p>
+<h2>Rework <code>Null&lt;T&gt;</code> type</h2>
+<p>Even if proper null-safety can't be achieved in Haxe (though we definitely should still try), the <code>Null&lt;T&gt;</code> type surely should be abstract, not a typedef. This gives so much headaches and bugs in both macros and compiler internals, because typedef is supposed to be an alias, but in case of <code>Null&lt;T&gt;</code>, it's not - on static targets, nullable types are very much different from non-nullable ones and the fact that you can easily lose the nullability aspect by mere using <code>Context.follow()</code> is very annoying.</p>
+<h2>Rework RTTI and -xml output</h2>
+<p>The data format used by <code>-xml</code> and <code>haxe.rtti</code> is horrible, not only because it's XML, but also it's quite badly designed.
+It should be reworked to a compact JSON-based format that easily maps to typedef'd structures. Removing the whole RTTI functionality
+would work too, because often it's much better to write a macro that stores only the information you actually need in the run-time instead of everything. But as long as it's opt-in, I'm fine with it.</p>
+<h2>Rework <code>Dynamic</code></h2>
+<p>I absolutely hate <code>Dynamic</code>. It's VERY error-prone in general and moreover it always puts sticks in the wheels for actually good language/compiler features, such as analyzer, inline extern methods, method/operator overloading, etc.</p>
+<p>Instead of current <code>Dynamic</code>, we should have the <a href="https://github.com/haxetink/tink_core#any"><code>Any</code></a> type that doesn't provide any field or array access and doesn't try to coerce to anything, but can be casted to a proper type. Much like the e.g. <code>object</code> in C#. That way, returning <code>Any</code> from a function shouldn't result in a monomorph type (the <code>Unknown</code>), but should stay <code>Any</code>. Everyone would win in terms of code quality. Even for low-level platform-specific code we could live without <code>Dynamic</code>: just cast your whatever to a structure and work in a typed way (or use <code>untyped</code>).</p>
+<p>Also, <code>implements Dynamic</code> and the <code>resolve</code> magic should go away with this change (alternatives: abstract resolve and/or operator overloading).</p>
+<p>It's quite a huge change, we could start with simply including <code>Any</code> in the standard library and promoting its usage instead of <code>Dynamic</code>.</p>
+<h2>Add method and operator overloading for classes</h2>
+<p>I'm not a fan of method overloading in general, but sometimes I feel like it's just the right solution for some things and I don't think it's impossible for Haxe to support it, especially if <code>Dynamic</code> will be changed as described above. For a reference, one could look at how <a href="http://duoco.de/">DuoCode</a> implements C# method overloading on JavaScript by using name mangling. This should not be a problem in a statically typed world.</p>
+<p>If it won't be implemented, Simon had two great ideas regarding this that should be a good compromise:</p><ul><li>allow extern-inline overload methods (so they are explicitly compile-time only without magic name mangling)</li><li>operator overloading through static extension (so you can bring your operators with a <code>using</code>)</li></ul>
+<p>More on this topic, <code>ArrayAccess&lt;T&gt;</code> for externs should be replaced with operator overloading and support specifying key type as well. And while I find the <code>@:op(a[b])</code> syntax quite clever, I think we should have a proper syntax for this, like C#'s <code>operator this[int x]</code>.</p>
+<h2>Rework function type</h2>
+<p>The current <code>Arg1-&gt;Arg2-&gt;Ret</code> function syntax is quite bad. Not only because it's unfamiliar to most non-FP people, but also because it implies auto-currying for FP people AND (most importantly) it doesn't support argument names, which are very helpful for code self-documentation, auto-completion and IDE support (e.g. for the "generate callback method" functionality). It would be nice to change this syntax, at least to include names, like <code>name1:Arg1 -&gt; ?name2:Arg2 -&gt; Ret</code>, but something without those arrows would be better. A nice syntax for the function type is I think the one from <a href="http://www.typescriptlang.org/">TypeScript</a>: <code>(arg1:Type1, arg2:Type)=&gt;Ret</code>, and it would play really well with the commonly accepted short lambda syntax <code>(x:Int, y:String) =&gt; "hello"</code> (and yes, I do want short lambdas please).</p>
+<h2>Improve variance</h2>
+<p>This is hard and few people really understand variance rules (e.g. I don't), but I think C# got it right and their variance system is actually better with explicit covariance and contravariance, which is useful when working with collections and interfaces.</p>
+<h2>Rework iterators</h2>
+<p>Currently, Haxe's <code>Iterator</code> type relies on structure subtyping which implies runtime overhead on many static targets, which is
+really bad for performance of such an important thing like iterators. It should be an interface instead. Also, the <code>next/hasNext</code> rules aren't very clear, in .NET enumerators have better APIs with <code>MoveNext</code> and <code>Current</code>.</p>
+<h2>Clean-up standard library</h2>
+<p>Haxe std lib is fairly okay, but not great and it should be reviewed, most importantly:</p><ul><li>redesign process API</li><li>add async io/networking API</li><li>move stuff like web dispatch and SPOD out of the std lib to official haxelib projects</li><li>add cross-platform unicode support</li><li>generally review naming and package structure</li><li>improve documentation (we need more structured way to describe function arguments, maybe adopt python-like doctesting)</li><li>fix the Date APIs (e.g. handle utc/local times properly)</li><li><code>haxe.remoting.Proxy</code>, <code>haxe.xml.Proxy</code> should move away from the compiler to <code>@:genericBuild</code> macros</li><li>there should be a generic <code>Type&lt;T&gt;</code> alternative to <code>Class&lt;T&gt;</code> and <code>Enum&lt;T&gt;</code> for use in <code>ExprOf&lt;T&gt;</code> for function signatures in macro methods and macro static extension functions, because those can work with any type, not just class or enum.</li></ul>
+<h2>Restructure and comment compiler source code</h2>
+<p>I absolutely love what Simon is doing with the Haxe's ocaml sources with refactoring and cleaning stuff up, but there's still a lot to do, and we should definitely start better commenting the source (follow the boyscout principle). OCaml is not hard at all, and with better structure and comments, I believe every macro power-user could hack the compiler.</p>
+<h2>Clean up metadata</h2>
+<p>Currently, situation with the metadata in Haxe is a bit of a mess, here's what I think should be done:</p><ul><li>think of the standard naming scheme for the metadata to prevent clashes (maybe even introduce namespaces)</li><li>support typed metadata, add macro-"hooks" for the metadata (look at C# attributes for some inspiration)</li></ul>
+<h2>Clean up syntax and old magic</h2>
+<p>Some Haxe syntax feels a bit "hacked-in" (maybe because initially it was, but nowadays there are some widely used language features with some syntax quirks), for example:</p><ul><li><code>@:enum abstract</code> - this should use <code>enum</code> keyword, not a metadata, because the sacred union of enum and abstract is deeply integrated into the compiler and thus deserve a proper syntax for it.</li><li>
+<p>structure types could be a bit friendlier:</p><ul><li>since the types have two different notations (<code>{a:Int, b:Int}</code> vs <code>{var a:Int; var b:Int;}</code>), the structure extension syntax should also support <code>;</code> at the end (e.g. <code>{&gt;Some, x:Int}</code> and <code>{&gt;Some; var b:Int;}</code>)</li><li>the short notation could also support read/write access for properties (e.g. <code>{a(default,null):Int}</code>)</li></ul></li><li>
+<p>speaking of read/write access. I'm not a fan of the current default/null/never/get/set/dynamic stuff and I think at least <code>null</code> should be changed to something more obvious (<code>private</code> maybe?). Also, currently it only supports simple words, but for macro purposes, it could support arbitrary expressions (so for example one could do <code>var a(return _a, return _a = value):Int</code> and auto-generate get/set functions for it with a macro!</p></li></ul>
+<h2>Add a couple of new features</h2>
+<p>I love Haxe's minimalistic syntax and clear feature set, but there are things that become more and more common and useful, and that not just short lambdas, but also this:</p><ul><li>Integrated async/await syntax similar to C#, ES7 and Python 3.5, translating functions in a reentrant state machines. I think it was implemented to some extent with macros, but this should really be a core feature of the modern language.</li><li>Destructurization assignments, similar to ES6, CoffeeScript and (to some extent) Python and Ocaml, e.g. <code>var {field1, field2} = someObject</code>. This leads us to tuples - a really great construct for returning multiple values, and it can be implemented quite efficiently (at least more efficient than the current alternative: anon structures).</li></ul>
+<h2>Improve IDE services</h2>
+<p>With Haxe 3.3 we greatly improved IDE support, but there's still work to be done:</p><ul><li>better structured JSON output for e.g. type info: for example, parsing function types is a HUGE pain (we already have this in the works)</li><li>unicode-aware lexing. Currently haxe reports positions in byte offsets which screws thing over when you use two bytes long or longer characters such as cyrillic or CJK in e.g. comments or strings: as a result, haxe simply reports wrong positions, so I think it's fair to require sources to be in UTF-8 in year 2016</li><li>some way to process the whole project, not just current display file, this is required for functionality like "find references", "rename" or "auto-import" to work right</li></ul>
+<h2>Infrastructure</h2>
+<p>Besides Haxe language, compiler and the standard library, there's a lot of work to be done regarding Haxe infrastructure, such as:</p><ul><li>Standard way to do haxe projects. We need something like <code>package.json</code> file from the JS world. Haxelib's <code>haxelib.json</code> file could evolve to be a generic project file. It could define build and test rules, specify per-project metadata and defines in a structured way, so IDEs could work with that for auto-completion and what not, etc. Maybe we should move even away from the "library" term and use something like "package" or think of some special word (like gem,egg,crate,etc).</li><li>All Haxe-related servers should support HTTPS (it's 2016, yay!)</li><li>Haxe and haxelib projects should be on CDN, so people that are far from EU don't suffer low download speeds.</li><li>Haxelib server should provide RESTful APIs for easy integration (badges, statistics, social, bounty, whatever services)</li><li>Contribution guidelines, formal extension proposal procedure (this is something that's already being worked on).</li><li>Official Haxe style guide (similar to <a href="https://www.python.org/dev/peps/pep-0008/">Python's PEP8</a>, and an official tool to format Haxe code.</li></ul>
+<h2>Conclusion</h2>
+<p>So this is what I'd like Haxe to be, while there are a lot of stuff I described here, it's mostly about quality of life improvements and polishing, not radically reimplementing the whole thing. And if at least a third of this will be implemented someday, Haxe will be even further ahead of everyone and I'll be a much happier person :)</p>
+            </section>
+        </article>
+        <div id="disqus_thread"></div>
+        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+    </div>
+    <aside class="sidebar" itemscope itemtype="http://schema.org/Person">
+        <article id="about">
+            <h2 itemprop="name"><span itemprop="givenName">Dan</span> <span itemprop="familyName">Korostelev</span></h2>
+            <section>
+                <img src="../photo.jpg" alt="My photo" id="my-photo" itemprop="image" />
+                <p itemprop="description">
+                    Passionate <span itemprop="jobTitle">programmer</span> from St.Petersburg, Russia.
+                    Loves open-source, game development and <a href="http://haxe.org">Haxe</a>!
+                </p>
+            </section>
+        </article>
+        <article id="links">
+            <h2>Links</h2>
+            <section>
+                <ul>
+                    <li><a title="GitHub" href="https://github.com/nadako"><i class="fa fa-lg fa-github"></i></a></li>
+                    <li><a title="LinkedIn" href="https://www.linkedin.com/in/nadako"><i class="fa fa-lg fa-linkedin"></i></a></li>
+                    <li><a title="Email" href="mailto:nadako@gmail.com" itemprop="email"><i class="fa fa-lg fa-envelope"></i></a></li>
+                    <li><a title="Twitter" href="https://twitter.com/nadako"><i class="fa fa-lg fa-twitter"></i></a></li>
+                </ul>
+                <p>
+                    <a title="Patreon" href="https://patreon.com/nadako">Support me on Patreon!</a>
+                </p>
+                <p>
+                    <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+                        <input type="hidden" name="cmd" value="_s-xclick">
+                        <input type="hidden" name="encrypted" value="-----BEGIN PKCS7-----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-----END PKCS7-----
+                        ">
+                        <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+                        <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+                    </form>
+                </p>
+            </section>
+        </article>
+    </aside>
+</div>
+
+<footer class="main-footer">
+    <p>
+        <a href="#">Back to top</a>
+    </p>
+</footer>
+
+<script>
+var disqus_config = function() {
+    this.page.url = "http://nadako.github.io/rants/posts/2016-06-21_haxe-next.html";
+    this.page.identifier = "99b90728-5abc-4dcd-8c7e-b6141f99d386";
+};
+(function() {
+var d = document, s = d.createElement('script');
+s.src = 'https://nadako.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<script src="../highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-75978661-1', 'auto');
+  ga('send', 'pageview');
+</script>
+</body>
+</html>

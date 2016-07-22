@@ -1,0 +1,137 @@
+body {
+    font-family: sans-serif;
+    color: #212121;
+    margin: 0;
+}
+
+a {
+    text-decoration: none;
+    color: #448AFF;
+}
+
+a:hover {
+    color: #212121;
+}
+
+p code, h1 code, h2 code, h3 code, h4 code, h5 code, h6 code, li code {
+    background-color: rgba(0,0,0,0.04);
+    padding: 0.2em;
+    border-radius: 3px;
+}
+
+.main-header {
+    background-color: #455A64;
+    margin-bottom: 2%;
+}
+
+.main-header h1 {
+    margin: 0;
+    padding: 1% 2%;
+    color: #fff;
+}
+
+.main-header a, .main-footer a {
+    color: #fff;
+}
+
+.main {
+    width: 75%;
+    margin: 0 auto;
+}
+
+.content {
+    width: 70%;
+    float: left;
+}
+
+.content img {
+    max-width: 100%;
+    height: auto;
+}
+
+.sidebar {
+    float: right;
+    width: 26%;
+    margin-left: 4%;
+    text-align: center;
+}
+
+.sidebar article {
+    background-color: #CFD8DC;
+    margin-bottom: 2%;
+}
+
+.sidebar article h2 {
+    color: #FFF;
+    margin: 0;
+    padding: 2%;
+    font-size: 120%;
+    background-color: #455A64;
+}
+
+.sidebar article section {
+    padding: 3% 2%;
+}
+
+.sidebar article p {
+    font-size: 85%;
+}
+
+#my-photo {
+    border-radius: 128px;
+    max-width: 150px;
+    width: 80%;
+    height: auto;
+}
+
+#links ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+#links ul li {
+    display: inline;
+}
+
+.main-footer {
+    clear: both;
+    background-color: #455A64;
+}
+
+.main-footer p {
+    margin: 0;
+    padding: 1%;
+    text-align: center;
+}
+
+.index-posts article {
+    background-color: #CFD8DC;
+    padding: 2%;
+    margin-bottom: 2%;
+    border-radius: 5px;
+}
+
+.index-posts header h2 {
+    margin: 0 0 1% 0;
+}
+
+.post-meta {
+    margin: 0;
+    font-size: 85%;
+    color: #5E676E;
+    display: flex;
+    justify-content: space-between;
+}
+
+.post header h1 {
+    font-size: 200%;
+    margin-top: 0;
+    margin-bottom: 2%;
+}
+
+.post .post-meta {
+    border-bottom: 1px solid #CFD8DC;
+    padding-bottom: 1%;
+    margin-bottom: 3%;
+}

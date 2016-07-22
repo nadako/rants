@@ -1,0 +1,401 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>nadako - Turn-based time scheduling</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.0.0/normalize.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="../github.css">
+    <link rel="alternate" type="application/atom+xml" title="nadako's rants" href="../atom.xml">
+</head>
+<body>
+
+<header class="main-header">
+    <h1><a href="../index.html" title="Go to the main page">nadako's rants</a></h1>
+</header>
+
+ <div class="main">
+    <div class="content">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+            <header>
+                <h1 itemprop="headline">Turn-based time scheduling</h1>
+                <section class="post-meta">
+                    <time itemprop="datePublished" datetime="2013-03-26">Published on 2013-03-26</time>
+                    <span class="tags"></span>
+                </section>
+            </header>
+            <section itemprop="articleBody">
+                <p>I finally came up with a simple yet versatile implementation for scheduling actions in a roguelike game.</p>
+<p>It's based on an energy principle: While actor has energy he can perform actions, after he used up all his energy, add some to it and move it to be the last in queue.</p>
+<h2>Basic implementation</h2>
+<p>We define actor as a simple interface:</p>
+<pre><code class="prettyprint haxe">interface IActor
+{
+    var energy:Int;
+    var speed:Int;
+    function act():Int;
+}</code></pre>
+<p>So, <code>energy</code> is his current energy, <code>speed</code> is how much energy we add after all energy is used, and the <code>act</code> function is obviously the one doing the job. It returns <strong>action energy cost</strong>, which will be substracted from actor's energy. This way we can define actors with different speed and actions that takes different time. This reminds me of classic turn-based games with action points, like UFO and Fallout.</p>
+<p>The scheduler class we begin with is very simple:</p>
+<pre><code class="prettyprint haxe">class Scheduler
+{
+    var queue:List&lt;IActor&gt;;
+
+    public function new()
+    {
+        queue = new List();
+    }
+
+    public function addActor(actor:IActor):Void
+    {
+        queue.add(actor);
+    }
+
+    public function removeActor(actor:IActor):Void
+    {
+        queue.remove(actor);
+    }
+
+    public function tick():Void
+    {
+        var actor = queue.first();
+        if (actor == null)
+            return;
+
+        while (actor.energy &gt; 0)
+        {
+            var actionCost = actor.act();
+            actor.energy -= actionCost;
+        }
+
+        actor.energy += actor.speed;
+        queue.add(queue.pop());
+    }
+}</code></pre>
+<p>So it's a straight-away implementation of what I've described above. Note that a good data structure for actor queue is a linked-list, because it will be rotated very often.</p>
+<p>It will however process only one actor per call, so you may want to call a few times in your game update loop:</p>
+<pre><code class="prettyprint haxe">var actorsPerUpdate = 1000;
+
+for (_ in 0...actorsPerUpdate)
+    scheduler.tick();</code></pre>
+<p>And now we're gonna make it more suitable for a real game. :) </p>
+<h2>Asynchronous input</h2>
+<p>What our basic implementation doesn't consider is that the actor can be in a situation he can't decide what to right away, like a player actor who waits asynchronous input from a human.</p>
+<p>We solve this by returning negative <strong>action cost</strong> from the <code>act()</code> function.</p>
+<p>We change our <code>tick</code> function to return early if <strong>action cost</strong> returned was negative.</p>
+<pre><code>public function tick():Bool
+{
+    var actor = queue.first();
+    if (actor == null)
+        return false;
+
+    while (actor.energy &gt; 0)
+    {
+        var actionCost = actor.act();
+
+        if (actionCost &lt; 0)
+            return false;
+
+        actor.energy -= actionCost;
+    }
+
+    actor.energy += actor.speed;
+    queue.add(queue.pop());
+
+    return true;
+}</code></pre>
+<p>Simple as that. We just return early from the function without messing with actor energy and position in queue, so next time we'll poll it again and this time he may be ready to do the action.</p>
+<p>This actually solves an ambiguity in the code: what to do if act function returned negative number? :)</p>
+<p>Also, note that we changed <code>tick</code> function return value to Bool. This means that it will return <code>true</code> if actor was successfully processed and we're ready to process next one and <code>false</code> otherwise. This will help avoid extra processing in our game update function that calls <code>tick</code> a number of times:</p>
+<pre><code class="prettyprint haxe">for (_ in 0...actorsPerUpdate)
+{
+    if (!scheduler.tick())
+        break;
+}</code></pre>
+<p>This way we will return from the loop early if there's no actors in queue or some actor is not ready to do his job right now.</p>
+<h2>Current actor removal</h2>
+<p>Another thing our implementation should consider is that actor could be removed as a result of processing its actions. We must stop processing this actor and move on to the next one. To do this, we just store the current actor in a variable and check it in <code>removeActor</code> function, setting the special flag to true.</p>
+<p>Add two property declarations to the <code>Scheduler</code> class:</p>
+<pre><code class="prettyprint haxe">var currentActor:IActor;
+var currentActorRemoved:Bool;</code></pre>
+<p>Change <code>removeActor</code> function to set the flag if current actor is removed:</p>
+<pre><code class="prettyprint haxe">public function removeActor(actor:IActor):Void
+{
+    queue.remove(actor);
+
+    if (currentActor == actor)
+        currentActorRemoved = true;
+}</code></pre>
+<p>Now, in our <code>tick</code> method, we set <code>currentActor</code> property before calling <code>actor.act()</code> and checking if it was removed using <code>currentActorRemoved</code> value:</p>
+<pre><code class="prettyprint haxe">public function tick():Bool
+{
+    var actor = queue.first();
+    if (actor == null)
+        return false;
+
+    while (actor.energy &gt; 0)
+    {
+        currentActor = actor;
+        var actionCost = actor.act();
+        currentActor = null;
+
+        if (currentActorRemoved)
+        {
+            currentActorRemoved = false;
+            return true;
+        }
+
+        if (actionCost &lt; 0)
+            return false;
+
+        actor.energy -= actionCost;
+    }
+
+    actor.energy += actor.speed;
+    queue.add(queue.pop());
+
+    return true;
+}</code></pre>
+<p>Note how we reset <code>currentActor</code> and <code>currentActorRemoved</code> values after change, so there's no ambiguities in <code>removeActor</code> and <code>tick</code> methods if called after actor removal.</p>
+<h2>Scheduler locking</h2>
+<p>I also found it useful to be able to temporarily lock scheduler. For example for playing animations.</p>
+<p>Add a new property to the Scheduler class:</p>
+<pre><code class="prettyprint haxe">var lockCount:Int;</code></pre>
+<p>Add functions for locking and unlocking:</p>
+<pre><code class="prettyprint haxe">public function lock():Void
+{
+   lockCount++;
+}
+
+public function unlock():Void
+{
+    if (lockCount == 0)
+        throw "Cannot unlock not locked scheduler";
+    lockCount--;
+}</code></pre>
+<p>This one I actually borrowed from <a href="http://ondras.github.com/rot.js/">rot.js</a>, a great JS toolkit for roguelikes. Note that instead of using a boolean value, we increment and decrement lock count. This technique allows us to have recursive locks (i.e. some process locks the scheduler, then shows an animation that locks it again and unlocks when finished animating, after the animation, process does something more and releases its lock).</p>
+<p>Now we need to check for locks in our <code>tick</code> function:</p>
+<pre><code class="prettyprint haxe">public function tick():Bool
+{
+    if (lockCount &gt; 0)
+        return false;
+
+    var actor = queue.first();
+    if (actor == null)
+        return false;
+
+    while (actor.energy &gt; 0)
+    {
+        currentActor = actor;
+        var actionCost = actor.act();
+        currentActor = null;
+
+        if (currentActorRemoved)
+        {
+            currentActorRemoved = false;
+            return true;
+        }
+
+        if (actionCost &lt; 0)
+            return false;
+
+        actor.energy -= actionCost;
+
+        if (lockCount &gt; 0)
+            return false;
+    }
+
+    actor.energy += actor.speed;
+    queue.add(queue.pop());
+
+    return true;
+}</code></pre>
+<p>We check for lock at the very beginning of the function so we can exit early if locked. Then we do another check after processing successful action, because most locks will be done as a result of some action, be it directly or indirectly (like the "move" action causing animation that locks the scheduler, so other actors aren't moving in parallel).</p>
+<h2>Examples</h2>
+<p>This scheduling system can be used for basically everything: player, monsters, health/mana regeneration, spell effects, etc.</p>
+<h3>Time ticker</h3>
+<p>The most simple example of actor is a time ticker:</p>
+<pre><code class="prettyprint haxe">class TimeTicker implements IActor
+{
+    public static inline var TICK_ENERGY = 100;
+
+    public var speed:Int;
+    public var energy:Int;
+
+    public var ticks(default, null):Int;
+
+    public function new()
+    {
+        speed = energy = TICK_ENERGY;
+        ticks = 0;
+    }
+
+    public function act():Int
+    {
+        ticks++;
+        return TICK_ENERGY;
+    }
+}</code></pre>
+<p>Add it to the scheduler:</p>
+<pre><code class="prettyprint haxe">var ticker = new TimeTicker();
+scheduler.addActor(ticker);</code></pre>
+<p>And voila! We got our time ticking.</p>
+<p>Note that to simplify speed balancing it's advised to base all speed/actionCost values on some generic <strong>tick</strong> value, like a <code>TimeTicker.TICK_ENERGY</code> constant in the above example and apply different multipliers to it. For example:</p>
+<pre><code class="prettyprint haxe">var basicSpeed = TICK_ENERGY;
+var basicActionCost = TICK_ENERGY;
+
+var fastSpeed = TICK_ENERGY * 2;
+var slowSpeed = TICK_ENERGY * 0.5;
+var fastActionCost = TICK_ENERGY * 0.5;</code></pre>
+<p>This will save you a lot of time balancing speeds using energy-based scheduling system.</p>
+<h3>Creatures</h3>
+<p>Of course, the player and monsters are main actors in the timeline. A player actor could be implemented like this:</p>
+<pre><code class="prettyprint haxe">class PlayerActor implements IActor
+{
+    public var speed:Int;
+    public var energy:Int;
+
+    public function new()
+    {
+        speed = energy = TICK_ENERGY;
+    }
+
+    public function act():Int
+    {
+        if (Input.pressed(Key.UP))
+        {
+            moveForward();
+            return MOVE_COST; // amount of energy required to move
+        }
+        else
+        {
+            return -1; // not ready yet
+        }
+    }
+}</code></pre>
+<p>The monster could be implemented just like player:</p>
+<pre><code class="prettyprint haxe">class MonsterActor implements IActor
+{
+    public var speed:Int;
+    public var energy:Int;
+
+    public function new(fast:Bool)
+    {
+        speed = energy = fast ? TICK_ENERGY * 2 : TICK_ENERGY;
+    }
+
+    public function act():Int
+    {
+        if (aiDecidedToMoveForward())
+        {
+            moveForward();
+            return MOVE_COST; // amount of energy required to move
+        }
+        else
+        {
+            return TICK_ENERGY; // wait a turn
+        }
+    }
+}</code></pre>
+<h3>Health regen</h3>
+<p>Another actor could be attached to a creature that handles its health regeneration:</p>
+<pre><code class="prettyprint haxe">class HealthRegenerator implements IActor
+{
+    public var speed:Int;
+    public var energy:Int;
+
+    var regenCost:Int;
+    var creature:Creature;
+
+    public function new(creature:Creature, ticksToRegen:Int)
+    {
+        this.creature = creature;
+        speed = TICK_ENERGY;
+        regenCost = TICK_ENERGY * ticksToRegen;
+        energy = -regenCost; // delay first action by ticksToRegen
+    }
+
+    public function act():Int
+    {
+        creature.health++;
+        return regenCost;
+    }
+}</code></pre>
+<p>Note that initial <code>energy</code> is negative, so this actor won't do anything until it accumulates enough energy for the first time. Also note that <strong>action cost</strong> is more than <code>energy</code> so every time it regenerates, the next regeneration is delayed for some time.</p>
+<h2>Summary</h2>
+<p>I like this system alot because it's generic and highly reusable. It doesn't depend on anything at all and can be easily covered with unit-tests and moved to a library.</p>
+<p>Note that I didnt actually test the code I wrote in this article, it's written to give you a basic idea of what I mean. Here's an actual code I'm using in my project: <a href="https://gist.github.com/nadako/5246390">https://gist.github.com/nadako/5246390</a></p>
+            </section>
+        </article>
+        <div id="disqus_thread"></div>
+        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+    </div>
+    <aside class="sidebar" itemscope itemtype="http://schema.org/Person">
+        <article id="about">
+            <h2 itemprop="name"><span itemprop="givenName">Dan</span> <span itemprop="familyName">Korostelev</span></h2>
+            <section>
+                <img src="../photo.jpg" alt="My photo" id="my-photo" itemprop="image" />
+                <p itemprop="description">
+                    Passionate <span itemprop="jobTitle">programmer</span> from St.Petersburg, Russia.
+                    Loves open-source, game development and <a href="http://haxe.org">Haxe</a>!
+                </p>
+            </section>
+        </article>
+        <article id="links">
+            <h2>Links</h2>
+            <section>
+                <ul>
+                    <li><a title="GitHub" href="https://github.com/nadako"><i class="fa fa-lg fa-github"></i></a></li>
+                    <li><a title="LinkedIn" href="https://www.linkedin.com/in/nadako"><i class="fa fa-lg fa-linkedin"></i></a></li>
+                    <li><a title="Email" href="mailto:nadako@gmail.com" itemprop="email"><i class="fa fa-lg fa-envelope"></i></a></li>
+                    <li><a title="Twitter" href="https://twitter.com/nadako"><i class="fa fa-lg fa-twitter"></i></a></li>
+                </ul>
+                <p>
+                    <a title="Patreon" href="https://patreon.com/nadako">Support me on Patreon!</a>
+                </p>
+                <p>
+                    <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+                        <input type="hidden" name="cmd" value="_s-xclick">
+                        <input type="hidden" name="encrypted" value="-----BEGIN PKCS7-----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-----END PKCS7-----
+                        ">
+                        <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+                        <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+                    </form>
+                </p>
+            </section>
+        </article>
+    </aside>
+</div>
+
+<footer class="main-footer">
+    <p>
+        <a href="#">Back to top</a>
+    </p>
+</footer>
+
+<script>
+var disqus_config = function() {
+    this.page.url = "http://nadako.github.io/rants/posts/2013-03-26_roguelike-turn-based-time-scheduling.html";
+    this.page.identifier = "46340820457";
+};
+(function() {
+var d = document, s = d.createElement('script');
+s.src = 'https://nadako.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<script src="../highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-75978661-1', 'auto');
+  ga('send', 'pageview');
+</script>
+</body>
+</html>
