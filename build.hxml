@@ -3,5 +3,3 @@
 -lib hxnodejs
 -lib markdown
 -lib hxmustache
---next
--cmd node main.js
