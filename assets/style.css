@@ -19,6 +19,11 @@ p code, h1 code, h2 code, h3 code, h4 code, h5 code, h6 code, li code {
     border-radius: 3px;
 }
 
+code {
+    font: 14px "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+    background-color: #f7f7f7 !important;
+}
+
 .main-header {
     background-color: #455A64;
     margin-bottom: 2%;
